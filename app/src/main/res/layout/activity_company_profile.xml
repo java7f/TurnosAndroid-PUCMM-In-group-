@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CompanyProfile">
+
+    <TextView
+        android:id="@+id/companyName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:text="Nombre de la empresa"
+        android:textAlignment="center"
+        android:textSize="28dp"
+        android:textStyle="bold"
+        android:textColor="#010203"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/subsidiaryName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:text="Nombre de la sucursal"
+        android:textAlignment="center"
+        android:textSize="24dp"
+        android:layout_marginTop="70dp"
+        />
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:text="Dirección de la sucursal"
+        android:textAlignment="center"
+        android:textSize="18dp"
+        android:layout_marginTop="120dp"
+        />
+
+    <TextView
+        android:id="@+id/schedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:text="Horario de trabajo"
+        android:textAlignment="center"
+        android:textSize="18dp"
+        android:layout_marginTop="150dp"
+        />
+
+    <RelativeLayout
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:background="@drawable/circle_text"
+        android:gravity="center"
+        android:layout_marginTop="220dp">
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+
+            android:text="Horario de trabajo"
+            android:textAlignment="center"
+            />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/requestTurn"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="450dp"
+        android:backgroundTint="#2150de"
+        android:onClick="selectService"
+        android:text="Pedir turno"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/cancelTurn"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="510dp"
+        android:backgroundTint="#b00020"
+        android:onClick="cancelTurn"
+        android:text="Cancelar turno"
+        android:textColor="#ffffff"
+        android:visibility="invisible" />
+</RelativeLayout>
