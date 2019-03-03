@@ -9,7 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CompanyProfile"></activity>
+        <activity android:name=".JuanLuis.UserProfileActivity"></activity>
+        <activity android:name=".JuanLuis.CompanyProfileActivity" />
+        <activity android:name=".JuanLuis.AboutActivity" />
+        <activity android:name=".Jesse.DashboardActivity" />
+        <activity android:name=".Javier.CompanyDetailsActivity" />
+        <activity android:name=".Javier.AskTicketActivity" />
+        <activity android:name=".Alexander.RegisterActivity" />
+        <activity android:name=".Alexander.LoginActivity" />
+        <activity android:name=".Alexander.ForgotPasswordActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
