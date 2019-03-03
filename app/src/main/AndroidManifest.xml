@@ -9,21 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".JuanLuis.UserProfileActivity"></activity>
-        <activity android:name=".JuanLuis.CompanyProfileActivity" />
+        <activity android:name=".Javier.PickScheduleActivity"
+            android:parentActivityName=".Javier.CompanyDetailsActivity"></activity>
+        <activity android:name=".JuanLuis.UserProfileActivity" />
+        <activity android:name=".JuanLuis.CompanyProfileActivity"/>
         <activity android:name=".JuanLuis.AboutActivity" />
         <activity android:name=".Jesse.DashboardActivity" />
-        <activity android:name=".Javier.CompanyDetailsActivity" />
-        <activity android:name=".Javier.AskTicketActivity" />
+        <activity android:name=".Javier.CompanyDetailsActivity"
+            android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Javier.AskTicketActivity"
+            android:parentActivityName=".Javier.CompanyDetailsActivity"/>
         <activity android:name=".Alexander.RegisterActivity" />
         <activity android:name=".Alexander.LoginActivity" />
         <activity android:name=".Alexander.ForgotPasswordActivity" />
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
