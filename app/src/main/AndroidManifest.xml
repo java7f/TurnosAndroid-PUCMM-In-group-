@@ -3,22 +3,42 @@
     package="com.example.turnosandroid_pucmm">
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".JuanLuis.UserProfileActivity"></activity>
-        <activity android:name=".JuanLuis.CompanyProfileActivity" />
-        <activity android:name=".JuanLuis.AboutActivity" />
-        <activity android:name=".Jesse.DashboardActivity" />
-        <activity android:name=".Javier.CompanyDetailsActivity" />
-        <activity android:name=".Javier.AskTicketActivity" />
-        <activity android:name=".Alexander.RegisterActivity" />
-        <activity android:name=".Alexander.LoginActivity" />
-        <activity android:name=".Alexander.ForgotPasswordActivity" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".JuanLuis.UserProfileActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".JuanLuis.CompanyProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".JuanLuis.AboutActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Jesse.DashboardActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Javier.CompanyDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Javier.AskTicketActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Alexander.RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Alexander.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Alexander.ForgotPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
