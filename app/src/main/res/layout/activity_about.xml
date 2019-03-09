@@ -6,4 +6,48 @@
     android:layout_height="match_parent"
     tools:context=".JuanLuis.AboutActivity">
 
+    <TextView
+        android:id="@+id/Nosotros"
+        android:layout_width="264dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="498dp"
+        android:layout_marginBottom="59dp"
+        android:text="About Us"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintBottom_toTopOf="@+id/Descripcion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/Descripcion"
+        android:layout_width="725dp"
+        android:layout_height="448dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="37dp"
+        android:layout_marginBottom="112dp"
+        android:text="Turnos es una aplicación creada por un conjunto de estudiantes de la PUCMM para la materia Ingeniería de Software. El grupo esta conformado por: Javier Falcón, Jesse Peña, Alexander Schobel, Robert Goméz y Juan Luis Mejía."
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        app:layout_constraintBottom_toTopOf="@+id/BotonContactanos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Nosotros" />
+
+    <Button
+        android:id="@+id/BotonContactanos"
+        android:layout_width="239dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="281dp"
+        android:layout_marginTop="180dp"
+        android:layout_marginEnd="280dp"
+        android:layout_marginBottom="237dp"
+        android:text="Contactenos "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Descripcion" />
+
 </android.support.constraint.ConstraintLayout>
