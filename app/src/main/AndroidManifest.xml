@@ -23,10 +23,16 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Javier.CompanyDetailsActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Javier.AskTicketActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Javier.CompanyDetailsActivity"></activity>
         <activity
             android:name=".Alexander.RegisterActivity"
             android:screenOrientation="portrait" />
@@ -37,13 +43,15 @@
             android:name=".Alexander.ForgotPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Javier.PickScheduleActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Javier.CompanyDetailsActivity">
+        </activity>
+
+        <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
