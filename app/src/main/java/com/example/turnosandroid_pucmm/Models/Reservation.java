@@ -38,7 +38,24 @@ public class Reservation {
     private String typeOfService;
 
 
+    /**
+     * Constructor
+     */
+    public Reservation() {
+        id = "";
+        createdAt = new Timestamp(0,0);
+        createdBy = new User();
+        schedule = new Timestamp(0,0);
+        typeOfService = "";
+    }
 
+    public Reservation(String id, Timestamp createdAt, User createdBy, Timestamp schedule, String typeOfService) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.schedule = schedule;
+        this.typeOfService = typeOfService;
+    }
 
     /**
      * Devuelve el ID del turno.

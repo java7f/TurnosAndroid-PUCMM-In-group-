@@ -30,6 +30,22 @@ public class User {
      */
     private Role roles;
 
+    /**
+     * Contructor
+     */
+    public User() {
+        firstName = "";
+        lastName = "";
+        emailAddress = "";
+        roles = new Role();
+    }
+
+    public User(String firstName, String lastName, String emailAddress, Role roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.emailAddress = emailAddress;
+        this.roles = roles;
+    }
 
     /**
      * Devuelve el primer nombre;

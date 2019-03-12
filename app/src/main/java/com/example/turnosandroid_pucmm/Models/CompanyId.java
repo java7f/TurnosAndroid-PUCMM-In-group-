@@ -8,6 +8,13 @@ public class CompanyId extends Company {
     private String id;
 
     /**
+     * Constructor
+     */
+    public CompanyId() {
+        this.id = "";
+    }
+
+    /**
      * Devuelve el ID de la empresa.
      * @return String con ID.
      */

@@ -18,7 +18,20 @@ public class Membership {
     /**
      * Nivel de la membresía.
      */
-    private int levelOfPreference;
+    private String levelOfPreference;
+
+    /**
+     * Constructor.
+     */
+    public Membership() {
+        name = "";
+        levelOfPreference= "";
+    }
+
+    public Membership(String name, String levelOfPreference) {
+        this.name = name;
+        this.levelOfPreference = levelOfPreference;
+    }
 
     /**
      * Función que devuelve el nombre de la membresía.
@@ -40,7 +53,7 @@ public class Membership {
      * Función que devuelve el nivel de preferencia de la membresía.
      * @return Entero con el nivel de preferencia.
      */
-    public int getLevelOfPreference() {
+    public String getLevelOfPreference() {
         return levelOfPreference;
     }
 
@@ -48,7 +61,7 @@ public class Membership {
      * Función que fija el nivel de preferencia de la membresía.
      * @param levelOfPreference Nivel de preferencia.
      */
-    public void setLevelOfPreference(int levelOfPreference) {
+    public void setLevelOfPreference(String levelOfPreference) {
         this.levelOfPreference = levelOfPreference;
     }
 }

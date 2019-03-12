@@ -7,6 +7,9 @@ package com.example.turnosandroid_pucmm.Models;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Clase representativa de la información de una Sucursal en una Empresa.
  */
@@ -25,7 +28,7 @@ public class Office {
     private String phone;
 
     //Tiempo de espera promedio.
-    private int averageNumber;
+    private Integer averageTime;
 
     //Latitud de la localización.
     private String latitude;
@@ -40,23 +43,61 @@ public class Office {
     private Timestamp closesAt;
 
     //¿Tiene estaciones para clientes preferenciales?
-    private boolean hasStationsForPreferentials;
+    private Boolean hasStationsForPreferential;
 
     //¿Tiene estaciones para clientes con membresía?
-    private boolean hasStationsForMemberships;
+    private Boolean hasStationsForMemberships;
 
     //Lista de servicios disponibles en la sucursal.
-    private Service[] services;
+    private List<Service> services;
 
     //Lista de las estaciones para atención al cliente.
-    private Station[] stations;
+    private List<Station> stations;
 
     //Lista de turnos para gestionar generaciones de tickets.
-    private Turn[] turns;
+    private List<Turn> turns;
 
     //Lista de turnos para gestionar reservas de horario.
-    private Reservation[] reservations;
+    private List<Reservation> reservations;
 
+    /**
+     * Constructor
+     */
+    public Office() {
+        id = "";
+        name = "";
+        address = "";
+        phone = "";
+        averageTime = 0;
+        latitude = "";
+        longitude = "";
+        opensAt = new Timestamp(0,0);
+        closesAt = new Timestamp(0,0);
+        hasStationsForMemberships = false;
+        hasStationsForPreferential = false;
+        services = new ArrayList<>();
+        stations = new ArrayList<>();
+        turns = new ArrayList<>();
+        reservations  = new ArrayList<>();
+    }
+
+    public Office(String id, String name, String address, String phone, Integer averageTime, String latitude, String longitude, Timestamp opensAt, Timestamp closesAt, Boolean hasStationsForPreferential, Boolean hasStationsForMemberships, List<Service> services, List<Station> stations, List<Turn> turns, List<Reservation> reservations) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.averageTime = averageTime;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.opensAt = opensAt;
+        this.closesAt = closesAt;
+        this.hasStationsForPreferential = hasStationsForPreferential;
+        this.hasStationsForMemberships = hasStationsForMemberships;
+        this.services = services;
+        this.stations = stations;
+        this.turns = turns;
+        this.reservations = reservations;
+    }
 
     /**
      * Devuelve el ID de la sucursal.
@@ -126,16 +167,16 @@ public class Office {
      * Devuelve el tiempo de espera promedio en una sucursal.
      * @return Entero con tiempo de espera.
      */
-    public int getAverageNumber() {
-        return averageNumber;
+    public Integer getAverageTime() {
+        return averageTime;
     }
 
     /**
      * Fija el valor de tiempo de espera.
-     * @param averageNumber Tiempo de espera.
+     * @param averageTime Tiempo de espera.
      */
-    public void setAverageNumber(int averageNumber) {
-        this.averageNumber = averageNumber;
+    public void setAverageTime(Integer averageTime) {
+        this.averageTime = averageTime;
     }
 
     /**
@@ -206,23 +247,23 @@ public class Office {
      * Devuelve si la sucursal tiene estaciones de atención preferencial.
      * @return True si tiene estaciones para preferenciales.
      */
-    public boolean isHasStationsForPreferentials() {
-        return hasStationsForPreferentials;
+    public Boolean getHasStationsForPreferential() {
+        return hasStationsForPreferential;
     }
 
     /**
      * Fija si una sucursal tiene estaciones para atención preferencial.
-     * @param hasStationsForPreferentials true or false
+     * @param hasStationsForPreferential true or false
      */
-    public void setHasStationsForPreferentials(boolean hasStationsForPreferentials) {
-        this.hasStationsForPreferentials = hasStationsForPreferentials;
+    public void setHasStationsForPreferential(Boolean hasStationsForPreferential) {
+        this.hasStationsForPreferential = hasStationsForPreferential;
     }
 
     /**
      * Devuelve si una sucursal tiene estaciones para membresías.
      * @return True si tiene estaciones para membresías.
      */
-    public boolean isHasStationsForMemberships() {
+    public Boolean getHasStationsForMemberships() {
         return hasStationsForMemberships;
     }
 
@@ -230,7 +271,7 @@ public class Office {
      * Fija si una sucursal tiene estaciones para membresías.
      * @param hasStationsForMemberships true or false.
      */
-    public void setHasStationsForMemberships(boolean hasStationsForMemberships) {
+    public void setHasStationsForMemberships(Boolean hasStationsForMemberships) {
         this.hasStationsForMemberships = hasStationsForMemberships;
     }
 
@@ -238,7 +279,7 @@ public class Office {
      * Devuelve la lista de servicios ofrecidos en la sucursal.
      * @return Lista de Service
      */
-    public Service[] getServices() {
+    public List<Service> getServices() {
         return services;
     }
 
@@ -246,7 +287,7 @@ public class Office {
      * Fija la lista de servicios ofrecidos.
      * @param services Lista de Service
      */
-    public void setServices(Service[] services) {
+    public void setServices(List<Service> services) {
         this.services = services;
     }
 
@@ -254,7 +295,7 @@ public class Office {
      * Devuelve la lista de estaciones en la sucursal.
      * @return Lista de Station
      */
-    public Station[] getStations() {
+    public List<Station> getStations() {
         return stations;
     }
 
@@ -262,7 +303,7 @@ public class Office {
      * Fija la lista de estaciones.
      * @param stations Lista de Station.
      */
-    public void setStations(Station[] stations) {
+    public void setStations(List<Station> stations) {
         this.stations = stations;
     }
 
@@ -270,7 +311,7 @@ public class Office {
      * Devuelve la lista de turnos de generación de tickets.
      * @return Lista de Turn
      */
-    public Turn[] getTurns() {
+    public List<Turn> getTurns() {
         return turns;
     }
 
@@ -278,7 +319,7 @@ public class Office {
      * Fija la lista de turnos por generación de ticket.
      * @param turns Lista de Turn
      */
-    public void setTurns(Turn[] turns) {
+    public void setTurns(List<Turn> turns) {
         this.turns = turns;
     }
 
@@ -286,7 +327,7 @@ public class Office {
      * Devuelve la lista de turnos por reservaciones de horarios.
      * @return Lista de Reservation.
      */
-    public Reservation[] getReservations() {
+    public List<Reservation> getReservations() {
         return reservations;
     }
 
@@ -294,7 +335,7 @@ public class Office {
      * Fija la lista de turnos por reserva de horarios.
      * @param reservations Lista de Reservation.
      */
-    public void setReservations(Reservation[] reservations) {
+    public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
     }
 }

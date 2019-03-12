@@ -24,13 +24,29 @@ public class Station {
     /**
      * ¿Acepta clientes preferenciales?
      */
-    private boolean isForPreferentialAttention;
+    private Boolean isForPreferentialAttention;
 
     /**
      * ¿Acepta clientes con membresía?
      */
-    private boolean isForMemberships;
+    private Boolean isForMemberships;
 
+    /**
+     * Constructor
+     */
+    public Station() {
+        id = "";
+        typeOfService = "";
+        isForPreferentialAttention = false;
+        isForMemberships = false;
+    }
+
+    public Station(String id, String typeOfService, Boolean isForPreferentialAttention, Boolean isForMemberships) {
+        this.id = id;
+        this.typeOfService = typeOfService;
+        this.isForPreferentialAttention = isForPreferentialAttention;
+        this.isForMemberships = isForMemberships;
+    }
 
     /**
      * Devuelve el ID de la sucursal;
@@ -68,31 +84,31 @@ public class Station {
      * Devuelve si la estación acepta clientes preferenciales o no.
      * @return true si acepta clientes preferenciales.
      */
-    public boolean isForPreferentialAttention() {
+    public Boolean getIsForPreferentialAttention() {
         return isForPreferentialAttention;
     }
 
     /**
      * Fija el atributo que indica si acepta clientes preferenciales.
-     * @param forPreferentialAttention verdadero o falso.
+     * @param isForPreferentialAttention verdadero o falso.
      */
-    public void setForPreferentialAttention(boolean forPreferentialAttention) {
-        isForPreferentialAttention = forPreferentialAttention;
+    public void setIsForPreferentialAttention(Boolean isForPreferentialAttention) {
+        this.isForPreferentialAttention = isForPreferentialAttention;
     }
 
     /**
      * Devuelve si la estación acepta clientes con membresía o no.
      * @return true si acepta clientes con membresía.
      */
-    public boolean isForMemberships() {
+    public Boolean getIsForMemberships() {
         return isForMemberships;
     }
 
     /**
      * Fija el atributo que indica si acepta clientes con membresía.
-     * @param forMemberships verdadero o falso.
+     * @param isForMemberships verdadero o falso.
      */
-    public void setForMemberships(boolean forMemberships) {
-        isForMemberships = forMemberships;
+    public void setIsForMemberships(Boolean isForMemberships) {
+        this.isForMemberships = isForMemberships;
     }
 }

@@ -16,6 +16,17 @@ public class Service {
     private String name;
 
     /**
+     * Constructor
+     */
+    public Service() {
+        name = "";
+    }
+
+    public Service(String name) {
+        this.name = name;
+    }
+
+    /**
      * Función que devuelve el nombre del servicio.
      * @return String con el nombre del servicio.
      */

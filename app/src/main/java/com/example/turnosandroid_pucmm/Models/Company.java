@@ -7,6 +7,8 @@ package com.example.turnosandroid_pucmm.Models;
 
 import com.google.firebase.Timestamp;
 
+import java.util.List;
+
 /**
  * Modelo representativo de la información contenida en una Empresa.
  */
@@ -50,12 +52,12 @@ public class Company {
     /**
      * Lista de membresías.
      */
-    private Membership[] memberships;
+    private List<Membership> memberships;
 
     /**
      * Lista de servicios.
      */
-    private Service[] services;
+    private List<Service> services;
 
     /**
      * Tiempo máximo de cancelación del ticket.
@@ -65,10 +67,41 @@ public class Company {
     /**
      * Lista de sucursales.
      */
-    private Office[] offices;
+    private List<Office> offices;
 
+    /**
+     * ¿Tiene membresías?
+     */
+    private Boolean hasMemberships;
 
+    public Company(Timestamp createdAt, User createdBy, String name, String emailAddress, String typeOfService, boolean acceptGuest, String ticketCriteria, List<Membership> memberships, List<Service> services, int timeLimitCancelTicket, List<Office> offices, Boolean hasMemberships) {
+        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.name = name;
+        this.emailAddress = emailAddress;
+        this.typeOfService = typeOfService;
+        this.acceptGuest = acceptGuest;
+        this.ticketCriteria = ticketCriteria;
+        this.memberships = memberships;
+        this.services = services;
+        this.timeLimitCancelTicket = timeLimitCancelTicket;
+        this.offices = offices;
+        this.hasMemberships = hasMemberships;
+    }
 
+    public Company() {
+        /*createdAt = new Timestamp(0,0);
+        createdBy = new User();
+        name = "";
+        emailAddress = "";
+        typeOfService = "";
+        acceptGuest = false;
+        ticketCriteria = "";
+        memberships = new ArrayList<>();
+        timeLimitCancelTicket = 0;
+        offices = new ArrayList<>();
+        hasMemberships = false;         */
+    }
 
     /**
      * Devuelve el tiempo de creación de la empresa.
@@ -186,7 +219,7 @@ public class Company {
      * Devuelve la lista de membresías.
      * @return Lista de Membership.
      */
-    public Membership[] getMemberships() {
+    public List<Membership> getMemberships() {
         return memberships;
     }
 
@@ -194,7 +227,7 @@ public class Company {
      * Fija la lista de membresías de la empresa.
      * @param memberships Lista de Membership.
      */
-    public void setMemberships(Membership[] memberships) {
+    public void setMemberships(List<Membership> memberships) {
         this.memberships = memberships;
     }
 
@@ -202,7 +235,7 @@ public class Company {
      * Devuelve la lista de servicios ofrecidos en la empresa.
      * @return Lista de Service
      */
-    public Service[] getServices() {
+    public List<Service> getServices() {
         return services;
     }
 
@@ -210,7 +243,7 @@ public class Company {
      * Fija la lista de servicios ofrecidos en la empresa.
      * @param services Lista de Service
      */
-    public void setServices(Service[] services) {
+    public void setServices(List<Service> services) {
         this.services = services;
     }
 
@@ -234,7 +267,7 @@ public class Company {
      * Devuelve la lista de sucursales.
      * @return Lista de Office.
      */
-    public Office[] getOffices() {
+    public List<Office> getOffices() {
         return offices;
     }
 
@@ -242,7 +275,23 @@ public class Company {
      * Fija la lista de sucursales.
      * @param offices Lista de Office.
      */
-    public void setOffices(Office[] offices) {
+    public void setOffices(List<Office> offices) {
         this.offices = offices;
+    }
+
+    /**
+     * Devuelve si la compañía tiene membresías.
+     * @return true si tiene membresías.
+     */
+    public Boolean getHasMemberships() {
+        return hasMemberships;
+    }
+
+    /**
+     * Fija si la compañía tiene o no membresías.
+     * @param hasMemberships true or false.
+     */
+    public void setHasMemberships(Boolean hasMemberships) {
+        this.hasMemberships = hasMemberships;
     }
 }

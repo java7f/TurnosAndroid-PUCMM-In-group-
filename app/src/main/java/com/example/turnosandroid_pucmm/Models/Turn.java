@@ -32,6 +32,22 @@ public class Turn {
      */
     private String typeOfService;
 
+    /**
+     * Constructor
+     */
+    public Turn() {
+        id = "";
+        createdAt = new Timestamp(0,0);
+        createdBy = new User();
+        typeOfService = "";
+    }
+
+    public Turn(String id, Timestamp createdAt, User createdBy, String typeOfService) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.typeOfService = typeOfService;
+    }
 
     /**
      * Devuelve el ID del turno.

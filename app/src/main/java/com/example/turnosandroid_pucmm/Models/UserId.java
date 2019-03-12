@@ -8,6 +8,13 @@ public class UserId extends User {
     private String id;
 
     /**
+     * Constructor
+     */
+    public UserId() {
+        id = "";
+    }
+
+    /**
      * Devuelve el ID del usuario.
      * @return String con ID.
      */
