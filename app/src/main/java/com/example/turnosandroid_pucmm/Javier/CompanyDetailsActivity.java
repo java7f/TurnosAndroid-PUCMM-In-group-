@@ -47,12 +47,6 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
         fetchData();
 
-
-        /*companyName.setText(mCompany.getName());
-        subsidiaryName.setText(mCompany.getOffices().get(0).getName());
-        address.setText(mCompany.getOffices().get(0).getAddress());
-        schedule.setText(mCompany.getOffices().get(0).getOpensAt().toString() + " - " + mCompany.getOffices().get(0).getOpensAt().toString());
-*/
         int test = intent.getIntExtra("hide", 1);
 
         if(intent.getExtras() != null && test == 1)
@@ -87,10 +81,16 @@ public class CompanyDetailsActivity extends AppCompatActivity {
                     if (document.exists()) {
 
                         // Convierte la data y la lleva a tu modelo
-                        Company temp = document.toObject(Company.class);
-                        mCompany = temp;
+                        Company tempCompany = document.toObject(Company.class);
+                        mCompany = tempCompany;
 
-                        Log.d(TAG,"DocumentSnapshot data: " + document.getData());
+                        // Log.d(TAG,"DocumentSnapshot data: " + mCompany);
+                        Log.d(TAG,"DocumentSnapshot data: " + mCompany.getTicketCriteria());
+                        // Log.d(TAG,"DocumentSnapshot data: " + document.getData());
+                        companyName.setText(mCompany.getName());
+                        subsidiaryName.setText(mCompany.getOffices().get(0).getName());
+                        address.setText(mCompany.getOffices().get(0).getAddress());
+                        schedule.setText(mCompany.getOffices().get(0).getOpensAt().toString() + " - " + mCompany.getOffices().get(0).getOpensAt().toString());
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -101,15 +101,4 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         });
     }
 
-   /* private void fetchData()
-    {
-        DocumentReference docRef = mFirestore.collection("companies").document("wRjpAUyr25ZYiLtUL110");
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                mCompany = documentSnapshot.toObject(Company.class);
-                Log.d(TAG,"DocumentSnapshot data: " + documentSnapshot.getData());
-            }
-        });
-    }*/
 }
