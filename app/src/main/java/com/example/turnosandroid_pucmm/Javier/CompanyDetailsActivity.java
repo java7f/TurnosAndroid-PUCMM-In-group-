@@ -80,17 +80,20 @@ public class CompanyDetailsActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
 
+                        int opensAt, closesAt;
+
                         // Convierte la data y la lleva a tu modelo
                         Company tempCompany = document.toObject(Company.class);
                         mCompany = tempCompany;
 
-                        // Log.d(TAG,"DocumentSnapshot data: " + mCompany);
                         Log.d(TAG,"DocumentSnapshot data: " + mCompany.getTicketCriteria());
                         // Log.d(TAG,"DocumentSnapshot data: " + document.getData());
                         companyName.setText(mCompany.getName());
                         subsidiaryName.setText(mCompany.getOffices().get(0).getName());
                         address.setText(mCompany.getOffices().get(0).getAddress());
-                        schedule.setText(mCompany.getOffices().get(0).getOpensAt().toString() + " - " + mCompany.getOffices().get(0).getOpensAt().toString());
+                        opensAt = mCompany.getOffices().get(0).getOpensAt().toDate().getHours();
+                        closesAt = mCompany.getOffices().get(0).getClosesAt().toDate().getHours();
+                        schedule.setText( opensAt + " - " + closesAt);
                     } else {
                         Log.d(TAG, "No such document");
                     }
