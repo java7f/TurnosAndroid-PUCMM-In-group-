@@ -1,5 +1,6 @@
 package com.example.turnosandroid_pucmm.Jesse;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +13,10 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.turnosandroid_pucmm.Javier.AskTicketActivity;
+import com.example.turnosandroid_pucmm.Javier.CompanyDetailsActivity;
 import com.example.turnosandroid_pucmm.Models.Company;
+import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -20,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class DashboardActivity extends AppCompatActivity {
@@ -31,38 +36,36 @@ public class DashboardActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private static final String TAG = "CompanyDetailsActivity";
 
-    ArrayList<String> listDatos;
+    List<Office> listDatos;
     RecyclerView recycler;
     Toolbar toolbar;
+    Company company;
+    AdapterDatos adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        recycler = new RecyclerView(this);
 
-        toolbar=findViewById(R.id.idToolbar);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dashboard);
+
+        toolbar = findViewById(R.id.idToolbar);
         setSupportActionBar(toolbar);
 
-        recycler=findViewById(R.id.recyclerId);
-        recycler.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        recycler = findViewById(R.id.recyclerId);
+        recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mFirestore = FirebaseFirestore.getInstance();
 
-        listDatos= new ArrayList<String>();
 
-        for(int i=0; i<5; i++) {
+/*
+        for(int i=0; i<8; i++) {
             listDatos.add("Sucursal #" + i + " ");
         }
-        AdapterDatos adapter = new AdapterDatos(listDatos);
+ */
+        fetchData();
 
-        adapter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),
-                        "Selección: " + listDatos.get
-                                (recycler.getChildAdapterPosition(v)), Toast.LENGTH_SHORT).show();
-            }
-        });
-        recycler.setAdapter(adapter);
+
+
+
     }
 
     @Override
@@ -72,7 +75,7 @@ public class DashboardActivity extends AppCompatActivity {
         return true;
     }
 
-    private void fetchData() {
+    public void fetchData() {
         mFirestore.collection("companies").document("wRjpAUyr25ZYiLtUL110")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -82,16 +85,24 @@ public class DashboardActivity extends AppCompatActivity {
                     if (document.exists()) {
 
                         // Convierte la data y la lleva a tu modelo
-                        Company tempCompany = document.toObject(Company.class);
-                        mCompany = tempCompany;
+                        adapter = new AdapterDatos(document.toObject(Company.class));
 
-                        Log.d(TAG,"DocumentSnapshot data: " + mCompany.getTicketCriteria());
+                        adapter.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(DashboardActivity.this, CompanyDetailsActivity.class);
+                                startActivity(intent);
+                            }
+                        });
+
+                        recycler.setAdapter(adapter);
+
 
                     } else {
                         Log.d(TAG, "No such document");
                     }
                 } else {
-                    Log.d( TAG,"get failed with ", task.getException());
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });

@@ -7,17 +7,14 @@
         android:title="item1"
         app:showAsAction="ifRoom"/>
 
-    <item android:id="@+id/idCercania"
+    <item android:id="@+id/idFilter"
         android:icon="@drawable/ic_more"
-        android:title="Cercanía"
+        android:title="Filter"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/idHoraDeCierre"
-        android:title="Hora de cierre"
+    <item android:id="@+id/idAbout"
+        android:title="About"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/idTiempoDeEspera"
-        android:title="Tiempo de espera"
-        app:showAsAction="never"/>
 
 </menu>

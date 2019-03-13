@@ -7,19 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.turnosandroid_pucmm.Models.Company;
+import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class AdapterDatos
         extends RecyclerView.Adapter<AdapterDatos.ViewHolderDatos>
         implements View.OnClickListener{
 
-    ArrayList<String> listDatos;
+    private Company company;
+    private List<Office> listOffices;
     private View.OnClickListener listener;
 
-    public AdapterDatos(ArrayList<String> listDatos) {
-        this.listDatos = listDatos;
+    public AdapterDatos(Company company) {
+        this.company = company;
     }
 
     @NonNull
@@ -35,12 +38,16 @@ public class AdapterDatos
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderDatos holder, int position) {
-        holder.asignarDatos(listDatos.get(position));
+        holder.asignarDatos(company, position);
     }
 
     @Override
     public int getItemCount() {
-        return listDatos.size();
+        if(company != null)
+            return company.getOffices().size();
+        else
+            return 1;
+
     }
 
     public void setOnClickListener(View.OnClickListener listener){
@@ -55,15 +62,30 @@ public class AdapterDatos
 
     public class ViewHolderDatos extends RecyclerView.ViewHolder {
 
-        TextView dato;
+        TextView idSucursal;
+        TextView idHorario;
+        TextView idNombre;
+        TextView idTiempo;
+        TextView idCantidadTurnos;
+
 
         public ViewHolderDatos(@NonNull View itemView) {
             super(itemView);
-            dato = itemView.findViewById(R.id.idDato);
+
+            idNombre = itemView.findViewById(R.id.idNombre);
+            idSucursal = itemView.findViewById(R.id.idSucursal);
+            idHorario = itemView.findViewById(R.id.idHorario);
+            idTiempo = itemView.findViewById(R.id.idTiempo);
+            idCantidadTurnos = itemView.findViewById(R.id.idCantidadTurnos);
         }
 
-        public void asignarDatos(String datos) {
-            dato.setText(datos);
+        public void asignarDatos(Company company, int position) {
+
+            listOffices = company.getOffices();
+            idNombre.setText(company.getName());
+            idSucursal.setText(listOffices.get(position).getName());
+            idHorario.setText(listOffices.get(position).getOpensAt().toDate().getHours() + ":00 - " + listOffices.get(position).getClosesAt().toDate().getHours() + ":00");
+
         }
     }
 }
