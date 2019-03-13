@@ -28,7 +28,7 @@
                 android:text="Nombre de la empresa"
                 android:textAlignment="center"
                 android:textColor="#ffff"
-                android:textSize="28dp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -41,7 +41,7 @@
                 android:text="Nombre de la sucursal"
                 android:textAlignment="center"
                 android:textColor="#ffff"
-                android:textSize="24dp" />
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/address"
@@ -53,7 +53,7 @@
                 android:text="Dirección de la sucursal"
                 android:textAlignment="center"
                 android:textColor="#ffff"
-                android:textSize="18dp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/schedule"
@@ -65,7 +65,7 @@
                 android:text="Horario de trabajo"
                 android:textAlignment="center"
                 android:textColor="#ffff"
-                android:textSize="18dp" />
+                android:textSize="14sp" />
 
         </RelativeLayout>
 
