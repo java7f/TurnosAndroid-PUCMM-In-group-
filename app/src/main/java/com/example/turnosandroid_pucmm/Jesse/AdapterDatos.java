@@ -11,25 +11,34 @@ import com.example.turnosandroid_pucmm.Models.Company;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterDatos
         extends RecyclerView.Adapter<AdapterDatos.ViewHolderDatos>
-        implements View.OnClickListener{
+        implements View.OnClickListener {
 
-    private Company company;
+    private List<Company> companies;
     private List<Office> listOffices;
     private View.OnClickListener listener;
+    private int officesAcum, companyIndex;
 
-    public AdapterDatos(Company company) {
-        this.company = company;
+    public AdapterDatos(List<Company> companies) {
+        this.companies = companies;
+        companyIndex = 0;
+        officesAcum = companies.get(0).getOffices().size();
+
+        listOffices = new ArrayList<>();
+        for (Company company : companies) {
+            listOffices.addAll(company.getOffices());
+        }
     }
 
     @NonNull
     @Override
     public ViewHolderDatos onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_list,null,false);
+                .inflate(R.layout.item_list, null, false);
 
         view.setOnClickListener(this);
 
@@ -38,24 +47,38 @@ public class AdapterDatos
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderDatos holder, int position) {
-        holder.asignarDatos(company, position);
+
+        /**
+         * Proceso que maneja el índice de la compañía a la cual se están desplegando sus sucursales.
+         * La idea del procedimiento consiste en poder determinar a cuál compañía pertenece
+         * la sucursal que está siendo desplegada en pantalla, obetenida del atributo listOffices.
+         */
+        if (companyIndex < companies.size()) {
+
+            holder.asignarDatos(companies.get(companyIndex), position);
+            if ((officesAcum - 1) == position) {
+                companyIndex++;
+                if (companyIndex < companies.size())
+                    officesAcum += companies.get(companyIndex).getOffices().size();
+            }
+
+            System.out.println(companyIndex + " / " + officesAcum);
+        }
+
     }
 
     @Override
     public int getItemCount() {
-        if(company != null)
-            return company.getOffices().size();
-        else
-            return 1;
-
+        return listOffices.size();
     }
 
-    public void setOnClickListener(View.OnClickListener listener){
+    public void setOnClickListener(View.OnClickListener listener) {
         this.listener = listener;
     }
+
     @Override
     public void onClick(View v) {
-        if(listener!=null){
+        if (listener != null) {
             listener.onClick(v);
         }
     }
@@ -81,11 +104,17 @@ public class AdapterDatos
 
         public void asignarDatos(Company company, int position) {
 
-            listOffices = company.getOffices();
+            System.out.println("Position: " + position + "/Company: " + company.getName() + "/Size = " + company.getOffices().size());
             idNombre.setText(company.getName());
             idSucursal.setText(listOffices.get(position).getName());
-            idHorario.setText(listOffices.get(position).getOpensAt().toDate().getHours() + ":00 - " + listOffices.get(position).getClosesAt().toDate().getHours() + ":00");
-
+            if(listOffices.get(position).getOpensAt().toDate().getHours() < 12 & listOffices.get(position).getClosesAt().toDate().getHours() < 12)
+                idHorario.setText(listOffices.get(position).getOpensAt().toDate().getHours() + ":00AM - " + listOffices.get(position).getClosesAt().toDate().getHours() + ":00AM");
+            else if(listOffices.get(position).getOpensAt().toDate().getHours() < 12 & listOffices.get(position).getClosesAt().toDate().getHours() > 12)
+                idHorario.setText(listOffices.get(position).getOpensAt().toDate().getHours() + ":00AM - " + (listOffices.get(position).getClosesAt().toDate().getHours() - 12) + ":00PM");
+            else if(listOffices.get(position).getOpensAt().toDate().getHours() > 12 & listOffices.get(position).getClosesAt().toDate().getHours() < 12)
+                idHorario.setText((listOffices.get(position).getOpensAt().toDate().getHours() - 12) + ":00PM - " + listOffices.get(position).getClosesAt().toDate().getHours() + ":00AM");
+            else
+                idHorario.setText((listOffices.get(position).getOpensAt().toDate().getHours() - 12) + ":00PM - " + (listOffices.get(position).getClosesAt().toDate().getHours() - 12) + ":00PM");
         }
     }
 }
