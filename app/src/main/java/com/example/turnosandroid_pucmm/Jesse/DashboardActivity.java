@@ -98,6 +98,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                             recycler.setAdapter(adapter);
 
+
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }

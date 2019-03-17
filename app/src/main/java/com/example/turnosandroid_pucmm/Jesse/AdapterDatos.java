@@ -61,10 +61,19 @@ public class AdapterDatos
                 if (companyIndex < companies.size())
                     officesAcum += companies.get(companyIndex).getOffices().size();
             }
-
             System.out.println(companyIndex + " / " + officesAcum);
+
         }
 
+    }
+
+    /**
+     * Devuelve la lista de sucursales desplegada.
+     * @return Lista de Office.
+     */
+    public List<Office> getListOffices()
+    {
+        return listOffices;
     }
 
     @Override

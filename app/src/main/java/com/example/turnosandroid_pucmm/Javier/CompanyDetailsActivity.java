@@ -80,20 +80,12 @@ public class CompanyDetailsActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
 
-                        int opensAt, closesAt;
-
                         // Convierte la data y la lleva a tu modelo
                         Company tempCompany = document.toObject(Company.class);
                         mCompany = tempCompany;
 
-                        Log.d(TAG,"DocumentSnapshot data: " + mCompany.getTicketCriteria());
-                        // Log.d(TAG,"DocumentSnapshot data: " + document.getData());
-                        companyName.setText(mCompany.getName());
-                        subsidiaryName.setText(mCompany.getOffices().get(0).getName());
-                        address.setText(mCompany.getOffices().get(0).getAddress());
-                        opensAt = mCompany.getOffices().get(0).getOpensAt().toDate().getHours();
-                        closesAt = mCompany.getOffices().get(0).getClosesAt().toDate().getHours();
-                        schedule.setText( opensAt + " - " + closesAt);
+                        //Muestra la información en pantalla
+                        setOfficeDetails();
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -102,6 +94,19 @@ public class CompanyDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setOfficeDetails()
+    {
+        int opensAt, closesAt;
+
+
+        companyName.setText(mCompany.getName());
+        subsidiaryName.setText(mCompany.getOffices().get(0).getName());
+        address.setText(mCompany.getOffices().get(0).getAddress());
+        opensAt = mCompany.getOffices().get(0).getOpensAt().toDate().getHours();
+        closesAt = mCompany.getOffices().get(0).getClosesAt().toDate().getHours();
+        schedule.setText( opensAt + " - " + closesAt);
     }
 
 }
