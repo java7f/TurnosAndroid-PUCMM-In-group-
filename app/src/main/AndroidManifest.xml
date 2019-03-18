@@ -9,9 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Javier.PickTypeOfTurnActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Javier.CompanyDetailsActivity">
+
+        </activity>
         <activity
             android:name=".JuanLuis.UserProfileActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".JuanLuis.CompanyProfileActivity"
             android:screenOrientation="portrait" />
@@ -21,24 +26,20 @@
         <activity
             android:name=".Jesse.DashboardActivity"
             android:screenOrientation="portrait">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity
             android:name=".Javier.CompanyDetailsActivity"
-            android:screenOrientation="portrait">
-
-
-        </activity>
+            android:parentActivityName=".Jesse.DashboardActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Javier.AskTicketActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Javier.CompanyDetailsActivity"></activity>
+            android:parentActivityName=".Javier.CompanyDetailsActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Alexander.RegisterActivity"
             android:screenOrientation="portrait" />
@@ -50,15 +51,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Javier.PickScheduleActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Javier.CompanyDetailsActivity">
-        </activity>
-
+            android:parentActivityName=".Javier.CompanyDetailsActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

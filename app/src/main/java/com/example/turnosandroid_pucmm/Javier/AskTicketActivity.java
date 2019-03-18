@@ -52,7 +52,7 @@ public class AskTicketActivity extends AppCompatActivity {
 
     public void selectSchedule(){
         Intent intent = getIntent();
-        Intent goToSchedule = new Intent(this, PickScheduleActivity.class);
+        Intent goToSchedule = new Intent(this, PickTypeOfTurnActivity.class);
         goToSchedule.putExtra("hide", intent.getStringExtra("hide"));
         startActivity(goToSchedule);
     }
