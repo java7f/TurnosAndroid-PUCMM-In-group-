@@ -5,10 +5,23 @@
 
 package com.example.turnosandroid_pucmm.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Modelo representativo de la información contenida en una membresía.
  */
-public class Membership {
+public class Membership implements Parcelable{
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Membership createFromParcel(Parcel in) {
+            return new Membership(in);
+        }
+
+        public Membership[] newArray(int size) {
+            return new Membership[size];
+        }
+    };
 
     /**
      * Nombre de la membresía.
@@ -63,5 +76,21 @@ public class Membership {
      */
     public void setLevelOfPreference(String levelOfPreference) {
         this.levelOfPreference = levelOfPreference;
+    }
+
+    public Membership(Parcel in){
+        this.name = in.readString();
+        this.levelOfPreference = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(levelOfPreference);
     }
 }

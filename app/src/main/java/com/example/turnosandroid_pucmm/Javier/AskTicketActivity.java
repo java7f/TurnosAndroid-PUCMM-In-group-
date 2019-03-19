@@ -8,7 +8,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.turnosandroid_pucmm.Models.Company;
+import com.example.turnosandroid_pucmm.Models.Office;
+import com.example.turnosandroid_pucmm.Models.Service;
 import com.example.turnosandroid_pucmm.R;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AskTicketActivity extends AppCompatActivity {
 
@@ -18,11 +25,17 @@ public class AskTicketActivity extends AppCompatActivity {
     ListView servicesList;
 
     /**
-     *
+     * Adaptador.
      */
     ArrayAdapter adapter;
 
-    String[] services= {"Impresión", "Fotocopia", "Diseño personalizado"};
+    Company mCompany;
+    Office mOffice;
+
+    List<Service> services;
+    List<String> servicesName;
+
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +43,22 @@ public class AskTicketActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ask_ticket);
         setTitle("Seleccione el servicio");
 
+        servicesName = new ArrayList<>();
+        intent =  getIntent();
+
+        mCompany = intent.getParcelableExtra("company");
+        mOffice = intent.getParcelableExtra("office");
+        services =  mCompany.getServices();
+
+        for(Service service : services)
+            servicesName.add(service.getName());
+
 
         //Init adapter
-        adapter = new ArrayAdapter<String>(this, R.layout.list_label, services);
+        adapter = new ArrayAdapter<String>(this, R.layout.list_label, servicesName);
 
         //Linking to list
-        servicesList= (ListView) findViewById(R.id.services_list);
+        servicesList = findViewById(R.id.services_list);
 
         //Set adapter
         servicesList.setAdapter(adapter);
@@ -51,9 +74,9 @@ public class AskTicketActivity extends AppCompatActivity {
     }
 
     public void selectSchedule(){
-        Intent intent = getIntent();
         Intent goToSchedule = new Intent(this, PickTypeOfTurnActivity.class);
-        goToSchedule.putExtra("hide", intent.getStringExtra("hide"));
+        goToSchedule.putExtra("company", mCompany);
+        goToSchedule.putExtra("office", mOffice);
         startActivity(goToSchedule);
     }
 }

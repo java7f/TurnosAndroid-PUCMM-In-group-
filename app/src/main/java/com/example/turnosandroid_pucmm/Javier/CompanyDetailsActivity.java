@@ -10,16 +10,28 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.turnosandroid_pucmm.Models.Company;
+import com.example.turnosandroid_pucmm.Models.CompanyId;
+import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 public class CompanyDetailsActivity extends AppCompatActivity {
 
     //Company for testing
-    private Company mCompany;
+    private CompanyId mCompany;
+
+    private Office mOffice;
+
+    private String companyId;
+
+    private String officeId;
 
     //Firebase instance
     private FirebaseFirestore mFirestore;
@@ -28,40 +40,54 @@ public class CompanyDetailsActivity extends AppCompatActivity {
     //Buttons
     private Button requestTurn, cancelTurn;
 
-    //Test fields
-    private TextView companyName, subsidiaryName, address, schedule;
+    //Text fields
+    private TextView companyName, subsidiaryName, address, schedule, time;
+
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_company_details);
-        Intent intent = getIntent();
-        mCompany = new Company();
-        requestTurn = (Button) findViewById(R.id.requestTurn);
-        cancelTurn = (Button) findViewById(R.id.cancelTurn);
-        companyName = (TextView) findViewById(R.id.companyName);
-        subsidiaryName = (TextView) findViewById(R.id.subsidiaryName);
-        address = (TextView) findViewById(R.id.address);
-        schedule = (TextView) findViewById(R.id.schedule);
+        intent = getIntent();
+        mCompany = new CompanyId();
+        requestTurn = findViewById(R.id.requestTurn);
+        cancelTurn = findViewById(R.id.cancelTurn);
+        companyName = findViewById(R.id.companyName);
+        subsidiaryName = findViewById(R.id.subsidiaryName);
+        address = findViewById(R.id.address);
+        schedule = findViewById(R.id.schedule);
+        time = findViewById(R.id.time);
 
         mFirestore = FirebaseFirestore.getInstance();
+
+        companyId = intent.getStringExtra("companyId");
+        officeId = intent.getStringExtra("officeId");
+
         fetchData();
 
-        int test = intent.getIntExtra("hide", 1);
+    }
 
+    @Override
+    protected void onResume() {
+        intent = getIntent();
+        int test = intent.getIntExtra("hide",0);
         if(intent.getExtras() != null && test == 1)
         {
             requestTurn.setEnabled(false);
             cancelTurn.setVisibility(View.VISIBLE);
         }
+        super.onResume();
     }
+
 
     /**
      * Prueba de paso de un activity a otro. Se llama cuando se presiona el botón de Pedir Turno.
      */
     public void selectService(View viewServices){
         Intent goToServices = new Intent(this, AskTicketActivity.class);
-        goToServices.putExtra("hide", 1);
+        goToServices.putExtra("company", mCompany);
+        goToServices.putExtra("office", mOffice);
         startActivity(goToServices);
     }
 
@@ -72,7 +98,7 @@ public class CompanyDetailsActivity extends AppCompatActivity {
     }
 
     private void fetchData() {
-        mFirestore.collection("companies").document("wRjpAUyr25ZYiLtUL110")
+        mFirestore.collection("companies").document(companyId)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -81,11 +107,18 @@ public class CompanyDetailsActivity extends AppCompatActivity {
                     if (document.exists()) {
 
                         // Convierte la data y la lleva a tu modelo
-                        Company tempCompany = document.toObject(Company.class);
+                        CompanyId tempCompany = document.toObject(CompanyId.class);
                         mCompany = tempCompany;
 
                         //Muestra la información en pantalla
                         setOfficeDetails();
+
+                        requestTurn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                selectService(v);
+                            }
+                        });
                     } else {
                         Log.d(TAG, "No such document");
                     }
@@ -98,15 +131,52 @@ public class CompanyDetailsActivity extends AppCompatActivity {
 
     private void setOfficeDetails()
     {
-        int opensAt, closesAt;
+        int opensAtHours, opensAtMinutes, closesAtHours, closesAtMinutes;
+        List<Office> companyOffices = mCompany.getOffices();
+
+        for (Office office : companyOffices)
+        {
+            if(office.getId().equals(officeId))
+                mOffice = office;
+        }
+
+        int turnsQuantity = mOffice.getTurns().size();
+        String waitingTime = Integer.toString(mOffice.getAverageTime() * turnsQuantity);
+
+        opensAtHours = mOffice.getOpensAt().toDate().getHours();
+        opensAtMinutes = mOffice.getOpensAt().toDate().getMinutes();
+
+        closesAtHours = mOffice.getClosesAt().toDate().getHours();
+        closesAtMinutes = mOffice.getClosesAt().toDate().getMinutes();
 
 
         companyName.setText(mCompany.getName());
-        subsidiaryName.setText(mCompany.getOffices().get(0).getName());
-        address.setText(mCompany.getOffices().get(0).getAddress());
-        opensAt = mCompany.getOffices().get(0).getOpensAt().toDate().getHours();
-        closesAt = mCompany.getOffices().get(0).getClosesAt().toDate().getHours();
-        schedule.setText( opensAt + " - " + closesAt);
+        subsidiaryName.setText(mOffice.getName());
+        address.setText(mOffice.getAddress());
+        schedule.setText("Horario: " + formatHour(opensAtHours, opensAtMinutes) + " - " + formatHour(closesAtHours, closesAtMinutes));
+        time.setText(waitingTime);
+    }
+
+    private String formatHour(int hour, int minutes)
+    {
+
+        if(hour > 12)
+            return Integer.toString(hour-12) + ":" + formatMinutes(minutes) + "PM";
+        else
+        {
+            if (hour == 0)
+                return "12:" + formatMinutes(minutes) + "AM";
+            else
+                return Integer.toString(hour) + ":" + formatMinutes(minutes) + "AM";
+        }
+    }
+
+    private String formatMinutes(int minutes)
+    {
+        if(minutes == 0)
+            return "00";
+        else
+            return Integer.toString(minutes);
     }
 
 }

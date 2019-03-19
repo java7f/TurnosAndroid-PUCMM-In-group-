@@ -12,6 +12,7 @@ import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AdapterDatos
@@ -109,22 +110,52 @@ public class AdapterDatos
             idHorario = itemView.findViewById(R.id.idHorario);
             idTiempo = itemView.findViewById(R.id.idTiempo);
             idCantidadTurnos = itemView.findViewById(R.id.idCantidadTurnos);
+
         }
 
         public void asignarDatos(Company company, int position) {
 
+            Office currentOffice = listOffices.get(position);
+            int turnsQuantity = currentOffice.getTurns().size();
+            String waitingTime = Integer.toString(currentOffice.getAverageTime() * turnsQuantity);
+
             System.out.println("Position: " + position + "/Company: " + company.getName() + "/Size = " + company.getOffices().size());
             idNombre.setText(company.getName());
-            idSucursal.setText(listOffices.get(position).getName());
-            if(listOffices.get(position).getOpensAt().toDate().getHours() < 12 & listOffices.get(position).getClosesAt().toDate().getHours() < 12)
-                idHorario.setText(listOffices.get(position).getOpensAt().toDate().getHours() + ":00AM - " + listOffices.get(position).getClosesAt().toDate().getHours() + ":00AM");
-            else if(listOffices.get(position).getOpensAt().toDate().getHours() < 12 & listOffices.get(position).getClosesAt().toDate().getHours() > 12)
-                idHorario.setText(listOffices.get(position).getOpensAt().toDate().getHours() + ":00AM - " + (listOffices.get(position).getClosesAt().toDate().getHours() - 12) + ":00PM");
-            else if(listOffices.get(position).getOpensAt().toDate().getHours() > 12 & listOffices.get(position).getClosesAt().toDate().getHours() < 12)
-                idHorario.setText((listOffices.get(position).getOpensAt().toDate().getHours() - 12) + ":00PM - " + listOffices.get(position).getClosesAt().toDate().getHours() + ":00AM");
-            else
-                idHorario.setText((listOffices.get(position).getOpensAt().toDate().getHours() - 12) + ":00PM - " + (listOffices.get(position).getClosesAt().toDate().getHours() - 12) + ":00PM");
+            idSucursal.setText(currentOffice.getName());
+            idCantidadTurnos.setText(Integer.toString(turnsQuantity));
+            idTiempo.setText(waitingTime + " Mins aprox");
+
+            int opensAtHours = currentOffice.getOpensAt().toDate().getHours();
+            int opensAtMinutes = currentOffice.getOpensAt().toDate().getMinutes();
+
+            int closesAtHours = currentOffice.getClosesAt().toDate().getHours();
+            int closesAtMinutes = currentOffice.getClosesAt().toDate().getMinutes();
+
+            idHorario.setText(formatHour(opensAtHours, opensAtMinutes) + " - " + formatHour(closesAtHours, closesAtMinutes));
+
         }
+    }
+
+    private String formatHour(int hour, int minutes)
+    {
+
+        if(hour > 12)
+            return Integer.toString(hour-12) + ":" + formatMinutes(minutes) + "PM";
+        else
+        {
+            if (hour == 0)
+                return "12:" + formatMinutes(minutes) + "AM";
+            else
+                return Integer.toString(hour) + ":" + formatMinutes(minutes) + "AM";
+        }
+    }
+
+    private String formatMinutes(int minutes)
+    {
+        if(minutes == 0)
+            return "00";
+        else
+            return Integer.toString(minutes);
     }
 }
 

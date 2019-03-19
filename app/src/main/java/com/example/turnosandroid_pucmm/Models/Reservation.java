@@ -5,12 +5,26 @@
 
 package com.example.turnosandroid_pucmm.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.widget.Toolbar;
+
 import com.google.firebase.Timestamp;
 
 /**
  * Modelo representativo de la información contenida en una reservación de horario.
  */
-public class Reservation {
+public class Reservation implements Parcelable {
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Reservation createFromParcel(Parcel in) {
+            return new Reservation(in);
+        }
+
+        public Reservation[] newArray(int size) {
+            return new Reservation[size];
+        }
+    };
 
     /**
      * Indentificador único del turno.
@@ -135,5 +149,27 @@ public class Reservation {
      */
     public void setSchedule(Timestamp schedule) {
         this.schedule = schedule;
+    }
+
+    public Reservation(Parcel in){
+        id = in.readString();
+        createdAt = in.readParcelable(Timestamp.class.getClassLoader());
+        createdBy = in.readParcelable(User.class.getClassLoader());
+        schedule = in.readParcelable(Timestamp.class.getClassLoader());
+        typeOfService = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeParcelable(createdAt, flags);
+        dest.writeParcelable(createdBy, flags);
+        dest.writeParcelable(schedule, flags);
+        dest.writeString(typeOfService);
     }
 }

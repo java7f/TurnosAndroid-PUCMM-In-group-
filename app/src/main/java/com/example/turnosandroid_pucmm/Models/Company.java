@@ -5,6 +5,9 @@
 
 package com.example.turnosandroid_pucmm.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 
 import java.util.List;
@@ -12,7 +15,17 @@ import java.util.List;
 /**
  * Modelo representativo de la información contenida en una Empresa.
  */
-public class Company {
+public class Company implements Parcelable {
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Company createFromParcel(Parcel in) {
+            return new Company(in);
+        }
+
+        public Company[] newArray(int size) {
+            return new Company[size];
+        }
+    };
 
     /**
      * Tiempo de creación de la empresa.
@@ -90,17 +103,7 @@ public class Company {
     }
 
     public Company() {
-        /*createdAt = new Timestamp(0,0);
-        createdBy = new User();
-        name = "";
-        emailAddress = "";
-        typeOfService = "";
-        acceptGuest = false;
-        ticketCriteria = "";
-        memberships = new ArrayList<>();
-        timeLimitCancelTicket = 0;
-        offices = new ArrayList<>();
-        hasMemberships = false;         */
+
     }
 
     /**
@@ -294,4 +297,44 @@ public class Company {
     public void setHasMemberships(Boolean hasMemberships) {
         this.hasMemberships = hasMemberships;
     }
+
+    public Company(Parcel in){
+        this.createdAt = in.readParcelable(Timestamp.class.getClassLoader());
+        this.createdBy = in.readParcelable(User.class.getClassLoader());
+        this.name = in.readString();
+        this.emailAddress = in.readString();
+        this.typeOfService = in.readString();
+        this.acceptGuest = in.readByte() != 0;
+        this.ticketCriteria = in.readString();
+        this.memberships = in.readArrayList(Membership.class.getClassLoader());
+        this.services = in.readArrayList(Service.class.getClassLoader());
+        this.timeLimitCancelTicket = in.readInt();
+        this.offices = in.readArrayList(Office.class.getClassLoader());
+        this.hasMemberships = in.readByte() != 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeParcelable(this.createdAt,flags);
+        dest.writeParcelable(this.createdBy, flags);
+        dest.writeString(name);
+        dest.writeString(emailAddress);
+        dest.writeString(typeOfService);
+        dest.writeInt(acceptGuest ? 1 : 0);
+        dest.writeString(ticketCriteria);
+        dest.writeList(memberships);
+        dest.writeList(services);
+        dest.writeInt(timeLimitCancelTicket);
+        dest.writeList(offices);
+        dest.writeInt(hasMemberships ? 1 : 0);
+    }
+
 }
+
+

@@ -5,11 +5,24 @@
 
 package com.example.turnosandroid_pucmm.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Clase representativa de la información contenida en una estación de trabajo
  * de una sucursal.
  */
-public class Station {
+public class Station implements Parcelable{
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Station createFromParcel(Parcel in) {
+            return new Station(in);
+        }
+
+        public Station[] newArray(int size) {
+            return new Station[size];
+        }
+    };
 
     /**
      * Identificador único de la estación.
@@ -110,5 +123,26 @@ public class Station {
      */
     public void setIsForMemberships(Boolean isForMemberships) {
         this.isForMemberships = isForMemberships;
+    }
+
+
+    public Station(Parcel in){
+        this.id = in.readString();
+        this.typeOfService = in.readString();
+        this.isForPreferentialAttention = in.readByte() != 0;
+        this.isForMemberships = in.readByte() != 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(typeOfService);
+        dest.writeInt(isForPreferentialAttention ? 1 : 0);
+        dest.writeInt(isForMemberships ? 1 : 0);
     }
 }

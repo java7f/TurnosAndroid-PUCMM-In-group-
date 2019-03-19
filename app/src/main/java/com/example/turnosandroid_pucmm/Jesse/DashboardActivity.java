@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.example.turnosandroid_pucmm.Javier.CompanyDetailsActivity;
 import com.example.turnosandroid_pucmm.Models.Company;
+import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -33,13 +35,15 @@ public class DashboardActivity extends AppCompatActivity {
 
     //Firebase instance
     private FirebaseFirestore mFirestore;
+    private HashMap<String,String> officeCompanyLinker;
     private static final String TAG = "CompanyDetailsActivity";
 
     List<Office> listDatos;
     RecyclerView recycler;
     Toolbar toolbar;
-    Company company;
+    CompanyId company;
     AdapterDatos adapter;
+    Office selectedOffice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +58,9 @@ public class DashboardActivity extends AppCompatActivity {
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mFirestore = FirebaseFirestore.getInstance();
         mCompanies = new ArrayList<>();
+        officeCompanyLinker = new HashMap<>();
 
 
-/*
-        for(int i=0; i<8; i++) {
-            listDatos.add("Sucursal #" + i + " ");
-        }
- */
         fetchData();
 
     }
@@ -81,22 +81,30 @@ public class DashboardActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                mCompanies.add(document.toObject(Company.class));
-                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                company = document.toObject(CompanyId.class);
+                                company.setId(document.getId());
+
+                                for(int i = 0; i < company.getOffices().size(); i++)
+                                    officeCompanyLinker.put(company.getOffices().get(i).getId(), company.getId());
+
+                                mCompanies.add(company);
                             }
 
                             adapter = new AdapterDatos(mCompanies);
+                            recycler.setAdapter(adapter);
 
                             adapter.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    selectedOffice = adapter.getListOffices().get
+                                            (recycler.getChildAdapterPosition(v));
                                     Intent intent = new Intent(DashboardActivity.this, CompanyDetailsActivity.class);
-                                    intent.putExtra("officeId","");
+                                    String officeID = selectedOffice.getId();
+                                    intent.putExtra("officeId", officeID);
+                                    intent.putExtra("companyId", officeCompanyLinker.get(officeID));
                                     startActivity(intent);
                                 }
                             });
-
-                            recycler.setAdapter(adapter);
 
 
                         } else {

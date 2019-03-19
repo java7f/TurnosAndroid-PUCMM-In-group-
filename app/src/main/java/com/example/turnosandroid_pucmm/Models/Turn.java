@@ -5,12 +5,25 @@
 
 package com.example.turnosandroid_pucmm.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 
 /**
  * Clase representativa de la información contenida en un turno.
  */
-public class Turn {
+public class Turn implements Parcelable {
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Turn createFromParcel(Parcel in) {
+            return new Turn(in);
+        }
+
+        public Turn[] newArray(int size) {
+            return new Turn[size];
+        }
+    };
 
     /**
      * Indentificador único del turno.
@@ -111,5 +124,25 @@ public class Turn {
      */
     public void setTypeOfService(String typeOfService) {
         this.typeOfService = typeOfService;
+    }
+
+    public Turn(Parcel in){
+        this.id = in.readString();
+        this.createdAt = in.readParcelable(Timestamp.class.getClassLoader());
+        this.createdBy = in.readParcelable(User.class.getClassLoader());
+        this.typeOfService = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeParcelable(createdAt, flags);
+        dest.writeParcelable(createdBy, flags);
+        dest.writeString(typeOfService);
     }
 }

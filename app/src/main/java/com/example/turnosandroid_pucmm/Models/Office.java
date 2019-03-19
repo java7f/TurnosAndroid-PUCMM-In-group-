@@ -5,6 +5,9 @@
 
 package com.example.turnosandroid_pucmm.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
@@ -13,7 +16,17 @@ import java.util.List;
 /**
  * Clase representativa de la información de una Sucursal en una Empresa.
  */
-public class Office {
+public class Office implements  Parcelable{
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Office createFromParcel(Parcel in) {
+            return new Office(in);
+        }
+
+        public Office[] newArray(int size) {
+            return new Office[size];
+        }
+    };
 
     //Indentificador único de la sucursal.
     private String id;
@@ -337,5 +350,47 @@ public class Office {
      */
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public Office(Parcel in){
+        this.id = in.readString();
+        this.name = in.readString();
+        this.address = in.readString();
+        this.phone = in.readString();
+        this.averageTime = in.readInt();
+        this.latitude = in.readString();
+        this.longitude = in.readString();
+        this.opensAt = in.readParcelable(Timestamp.class.getClassLoader());
+        this.closesAt = in.readParcelable(Timestamp.class.getClassLoader());
+        this.hasStationsForPreferential = in.readByte() != 0;
+        this.hasStationsForMemberships = in.readByte() != 0;
+        this.services = in.readArrayList(Service.class.getClassLoader());
+        this.stations = in.readArrayList(Station.class.getClassLoader());
+        this.turns = in.readArrayList(Turn.class.getClassLoader());
+        this.reservations = in.readArrayList(Reservation.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(address);
+        dest.writeString(phone);
+        dest.writeInt(averageTime);
+        dest.writeString(latitude);
+        dest.writeString(longitude);
+        dest.writeParcelable(opensAt, flags);
+        dest.writeParcelable(closesAt, flags);
+        dest.writeInt(hasStationsForPreferential ? 1 : 0);
+        dest.writeInt(hasStationsForMemberships ? 1 : 0);
+        dest.writeList(services);
+        dest.writeList(stations);
+        dest.writeList(turns);
+        dest.writeList(reservations);
     }
 }

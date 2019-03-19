@@ -5,10 +5,23 @@
 
 package com.example.turnosandroid_pucmm.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Clase representativa de los roles de un usuario.
  */
-public class Role {
+public class Role implements Parcelable {
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Role createFromParcel(Parcel in) {
+            return new Role(in);
+        }
+
+        public Role[] newArray(int size) {
+            return new Role[size];
+        }
+    };
 
     /**
      * ¿Es administrador?
@@ -88,4 +101,20 @@ public class Role {
    /* public void setClient(boolean client) {
         this.client = client;
     }*/
+
+    public Role(Parcel in){
+        administrator = in.readByte() != 0;
+        moderator = in.readByte() != 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(administrator ? 1 : 0);
+        dest.writeInt(moderator ? 1 : 0);
+    }
 }

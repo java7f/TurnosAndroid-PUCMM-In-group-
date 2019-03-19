@@ -5,10 +5,23 @@
 
 package com.example.turnosandroid_pucmm.Models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Modelo representativo de la información contenida por un usuario.
  */
-public class User {
+public class User implements Parcelable {
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     /**
      * Primer nombre.
@@ -109,5 +122,25 @@ public class User {
      */
     public void setRoles(Role roles) {
         this.roles = roles;
+    }
+
+    public User(Parcel in){
+        this.firstName = in.readString();
+        this.lastName = in.readString();
+        this.emailAddress = in.readString();
+        this.roles = in.readParcelable(Role.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(emailAddress);
+        dest.writeParcelable(roles, flags);
     }
 }
