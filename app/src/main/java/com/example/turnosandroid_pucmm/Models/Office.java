@@ -73,6 +73,9 @@ public class Office implements  Parcelable{
     //Lista de turnos para gestionar reservas de horario.
     private List<Reservation> reservations;
 
+    //Moderador asignado a la sucursal.
+    private UserId moderatorAssigned;
+
     /**
      * Constructor
      */
@@ -92,9 +95,10 @@ public class Office implements  Parcelable{
         stations = new ArrayList<>();
         turns = new ArrayList<>();
         reservations  = new ArrayList<>();
+        moderatorAssigned = new UserId();
     }
 
-    public Office(String id, String name, String address, String phone, Integer averageTime, String latitude, String longitude, Timestamp opensAt, Timestamp closesAt, Boolean hasStationsForPreferential, Boolean hasStationsForMemberships, List<Service> services, List<Station> stations, List<Turn> turns, List<Reservation> reservations) {
+    public Office(String id, String name, String address, String phone, Integer averageTime, String latitude, String longitude, Timestamp opensAt, Timestamp closesAt, Boolean hasStationsForPreferential, Boolean hasStationsForMemberships, List<Service> services, List<Station> stations, List<Turn> turns, List<Reservation> reservations, UserId moderatorAssigned) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -110,6 +114,7 @@ public class Office implements  Parcelable{
         this.stations = stations;
         this.turns = turns;
         this.reservations = reservations;
+        this.moderatorAssigned = moderatorAssigned;
     }
 
     /**
@@ -352,6 +357,22 @@ public class Office implements  Parcelable{
         this.reservations = reservations;
     }
 
+    /**
+     * Devuelve el usuario moderador de la sucursal.
+     * @return UserId con usuario.
+     */
+    public UserId getModeratorAssigned() {
+        return moderatorAssigned;
+    }
+
+    /**
+     * Fija el usuario moderador de la sucursal.
+     * @param moderatorAssigned UserId con usuario.
+     */
+    public void setModeratorAssigned(UserId moderatorAssigned) {
+        this.moderatorAssigned = moderatorAssigned;
+    }
+
     public Office(Parcel in){
         this.id = in.readString();
         this.name = in.readString();
@@ -368,6 +389,7 @@ public class Office implements  Parcelable{
         this.stations = in.readArrayList(Station.class.getClassLoader());
         this.turns = in.readArrayList(Turn.class.getClassLoader());
         this.reservations = in.readArrayList(Reservation.class.getClassLoader());
+        this.moderatorAssigned = in.readParcelable(UserId.class.getClassLoader());
     }
 
     @Override
@@ -392,5 +414,6 @@ public class Office implements  Parcelable{
         dest.writeList(stations);
         dest.writeList(turns);
         dest.writeList(reservations);
+        dest.writeParcelable(moderatorAssigned, flags);
     }
 }

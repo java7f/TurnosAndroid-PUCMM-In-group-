@@ -38,7 +38,7 @@ public class Turn implements Parcelable {
     /**
      * Usuario que crea el turno.
      */
-    private User createdBy;
+    private UserId createdBy;
 
     /**
      * Tipo de servicio solicitado.
@@ -46,16 +46,21 @@ public class Turn implements Parcelable {
     private String typeOfService;
 
     /**
+     * Estación a la que irá asignada el turno.
+     */
+    private String stationId;
+
+    /**
      * Constructor
      */
     public Turn() {
         id = "";
         createdAt = new Timestamp(0,0);
-        createdBy = new User();
+        createdBy = new UserId();
         typeOfService = "";
     }
 
-    public Turn(String id, Timestamp createdAt, User createdBy, String typeOfService) {
+    public Turn(String id, Timestamp createdAt, UserId createdBy, String typeOfService) {
         this.id = id;
         this.createdAt = createdAt;
         this.createdBy = createdBy;
@@ -98,7 +103,7 @@ public class Turn implements Parcelable {
      * Devuelve el usuario que creó el turno.
      * @return User que creó el turno.
      */
-    public User getCreatedBy() {
+    public UserId getCreatedBy() {
         return createdBy;
     }
 
@@ -106,7 +111,7 @@ public class Turn implements Parcelable {
      * Fija el usuario que creó el turno.
      * @param createdBy User que crea el turno.
      */
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(UserId createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -126,11 +131,28 @@ public class Turn implements Parcelable {
         this.typeOfService = typeOfService;
     }
 
+    /**
+     * Devuelve el ID de la estación a la que está asignada el turno.
+     * @return String con ID.
+     */
+    public String getStationId() {
+        return stationId;
+    }
+
+    /**
+     * Fija el ID de la estación.
+     * @param stationId ID.
+     */
+    public void setStationId(String stationId) {
+        this.stationId = stationId;
+    }
+
     public Turn(Parcel in){
         this.id = in.readString();
         this.createdAt = in.readParcelable(Timestamp.class.getClassLoader());
-        this.createdBy = in.readParcelable(User.class.getClassLoader());
+        this.createdBy = in.readParcelable(UserId.class.getClassLoader());
         this.typeOfService = in.readString();
+        this.stationId = in.readString();
     }
 
     @Override
@@ -144,5 +166,6 @@ public class Turn implements Parcelable {
         dest.writeParcelable(createdAt, flags);
         dest.writeParcelable(createdBy, flags);
         dest.writeString(typeOfService);
+        dest.writeString(stationId);
     }
 }

@@ -35,7 +35,7 @@ public class Company implements Parcelable {
     /**
      * Usuario que crea la empresa.
      */
-    private User createdBy;
+    private UserId createdBy;
 
     /**
      * Nombre de la empresa.
@@ -87,7 +87,7 @@ public class Company implements Parcelable {
      */
     private Boolean hasMemberships;
 
-    public Company(Timestamp createdAt, User createdBy, String name, String emailAddress, String typeOfService, boolean acceptGuest, String ticketCriteria, List<Membership> memberships, List<Service> services, int timeLimitCancelTicket, List<Office> offices, Boolean hasMemberships) {
+    public Company(Timestamp createdAt, UserId createdBy, String name, String emailAddress, String typeOfService, boolean acceptGuest, String ticketCriteria, List<Membership> memberships, List<Service> services, int timeLimitCancelTicket, List<Office> offices, Boolean hasMemberships) {
         this.createdAt = createdAt;
         this.createdBy = createdBy;
         this.name = name;
@@ -126,7 +126,7 @@ public class Company implements Parcelable {
      * Devuelve el usuario que creó la empresa.
      * @return User que creó el turno.
      */
-    public User getCreatedBy() {
+    public UserId getCreatedBy() {
         return createdBy;
     }
 
@@ -134,7 +134,7 @@ public class Company implements Parcelable {
      * Fija el usuario que creó la empresa.
      * @param createdBy User que crea el turno.
      */
-    public void setCreatedBy(User createdBy) {
+    public void setCreatedBy(UserId createdBy) {
         this.createdBy = createdBy;
     }
 
@@ -300,7 +300,7 @@ public class Company implements Parcelable {
 
     public Company(Parcel in){
         this.createdAt = in.readParcelable(Timestamp.class.getClassLoader());
-        this.createdBy = in.readParcelable(User.class.getClassLoader());
+        this.createdBy = in.readParcelable(UserId.class.getClassLoader());
         this.name = in.readString();
         this.emailAddress = in.readString();
         this.typeOfService = in.readString();
