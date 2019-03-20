@@ -33,7 +33,6 @@
         android:layout_gravity="center_vertical|center_horizontal"
         android:text="Contactarnos"
         android:textColor="@color/blanco"
-        android:background="@drawable/custom_button"
         android:textAllCaps="false"/>
 
 

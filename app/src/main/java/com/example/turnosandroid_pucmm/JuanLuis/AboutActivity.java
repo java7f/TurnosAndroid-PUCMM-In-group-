@@ -1,6 +1,5 @@
 package com.example.turnosandroid_pucmm.JuanLuis;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -40,8 +39,8 @@ public class AboutActivity extends AppCompatActivity {
 
     public void openContactenos(){
 
-        Intent intent = new Intent(this, ContactenosActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, ContactenosActivity.class);
+        //startActivity(intent);
 
     }
 

@@ -28,7 +28,7 @@ public class Turn implements Parcelable {
     /**
      * Indentificador único del turno.
      */
-    private String id;
+    private String turnId;
 
     /**
      * Tiempo de creación del turno.
@@ -38,7 +38,17 @@ public class Turn implements Parcelable {
     /**
      * Usuario que crea el turno.
      */
-    private UserId createdBy;
+    private String firstName;
+
+    /**
+     * Primer Apellido
+     */
+    private String lastName;
+
+    /**
+     * ID de la persona
+     */
+    private String id;
 
     /**
      * Tipo de servicio solicitado.
@@ -69,33 +79,45 @@ public class Turn implements Parcelable {
      * Constructor
      */
     public Turn() {
-        id = "";
+        turnId = "";
         createdAt = new Timestamp(0,0);
-        createdBy = new UserId();
         typeOfService = "";
+        isForPreferentialAttention = false;
+        isForMemberships = false;
+        membership = "";
+        lastName = "";
+        firstName = "";
+        id = "";
     }
 
-    public Turn(String id, Timestamp createdAt, UserId createdBy, String typeOfService) {
-        this.id = id;
+    public Turn(String turnId, Timestamp createdAt, String firstName, String lastName, String id, String typeOfService, String stationId, boolean isForPreferentialAttention, boolean isForMemberships, String membership) {
+        this.turnId = turnId;
         this.createdAt = createdAt;
-        this.createdBy = createdBy;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.id = id;
         this.typeOfService = typeOfService;
+        this.stationId = stationId;
+        this.isForPreferentialAttention = isForPreferentialAttention;
+        this.isForMemberships = isForMemberships;
+        this.membership = membership;
     }
+
 
     /**
      * Devuelve el ID del turno.
      * @return String con ID.
      */
-    public String getId() {
-        return id;
+    public String getTurnId() {
+        return turnId;
     }
 
     /**
      * Fija el valor del ID del turno.
-     * @param id ID.
+     * @param turnId ID.
      */
-    public void setId(String id) {
-        this.id = id;
+    public void setTurnId(String turnId) {
+        this.turnId = turnId;
     }
 
     /**
@@ -114,21 +136,6 @@ public class Turn implements Parcelable {
         this.createdAt = createdAt;
     }
 
-    /**
-     * Devuelve el usuario que creó el turno.
-     * @return User que creó el turno.
-     */
-    public UserId getCreatedBy() {
-        return createdBy;
-    }
-
-    /**
-     * Fija el usuario que creó el turno.
-     * @param createdBy User que crea el turno.
-     */
-    public void setCreatedBy(UserId createdBy) {
-        this.createdBy = createdBy;
-    }
 
     /**
      * Devuelve el tipo de servicio solicitado.
@@ -194,12 +201,41 @@ public class Turn implements Parcelable {
         this.membership = membership;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public Turn(Parcel in){
-        this.id = in.readString();
+        this.turnId = in.readString();
         this.createdAt = in.readParcelable(Timestamp.class.getClassLoader());
-        this.createdBy = in.readParcelable(UserId.class.getClassLoader());
         this.typeOfService = in.readString();
         this.stationId = in.readString();
+        this.isForPreferentialAttention = in.readByte() != 0;
+        this.isForMemberships = in.readByte() != 0;
+        this.membership = in.readString();
+        this.firstName = in.readString();
+        this.lastName = in.readString();
+        this.id = in.readString();
     }
 
     @Override
@@ -209,10 +245,15 @@ public class Turn implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeString(turnId);
         dest.writeParcelable(createdAt, flags);
-        dest.writeParcelable(createdBy, flags);
         dest.writeString(typeOfService);
         dest.writeString(stationId);
+        dest.writeInt(isForPreferentialAttention ? 1 : 0);
+        dest.writeInt(isForMemberships ? 1 : 0);
+        dest.writeString(membership);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(id);
     }
 }
