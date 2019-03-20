@@ -8,11 +8,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.turnosandroid_pucmm.Models.Company;
+import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.Models.Service;
 import com.example.turnosandroid_pucmm.R;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class AskTicketActivity extends AppCompatActivity {
      */
     ArrayAdapter adapter;
 
-    Company mCompany;
+    CompanyId mCompany;
     Office mOffice;
 
     List<Service> services;
@@ -67,16 +66,17 @@ public class AskTicketActivity extends AppCompatActivity {
         servicesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                selectSchedule();
+                selectSchedule(i);
             }
         });
 
     }
 
-    public void selectSchedule(){
+    public void selectSchedule(int position){
         Intent goToSchedule = new Intent(this, PickTypeOfTurnActivity.class);
         goToSchedule.putExtra("company", mCompany);
         goToSchedule.putExtra("office", mOffice);
+        goToSchedule.putExtra("service", servicesList.getItemAtPosition(position).toString());
         startActivity(goToSchedule);
     }
 }

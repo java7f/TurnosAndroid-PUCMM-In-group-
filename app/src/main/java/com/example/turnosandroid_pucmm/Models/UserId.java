@@ -1,6 +1,19 @@
 package com.example.turnosandroid_pucmm.Models;
 
-public class UserId extends User {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class UserId extends User implements Parcelable {
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public UserId createFromParcel(Parcel in) {
+            return new UserId(in);
+        }
+
+        public UserId[] newArray(int size) {
+            return new UserId[size];
+        }
+    };
 
     /**
      * Identificador único del usuario.
@@ -28,5 +41,21 @@ public class UserId extends User {
      */
     public void setId(String id) {
         this.id = id;
+    }
+
+    public UserId(Parcel in){
+        super(in);
+        this.id = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(id);
     }
 }

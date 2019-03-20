@@ -51,6 +51,21 @@ public class Turn implements Parcelable {
     private String stationId;
 
     /**
+     * ¿Es un turno de atención preferencial?
+     */
+    private boolean isForPreferentialAttention;
+
+    /**
+     * ¿Es un turno por membresía?
+     */
+    private boolean isForMemberships;
+
+    /**
+     * Membresía elegida.
+     */
+    private String membership;
+
+    /**
      * Constructor
      */
     public Turn() {
@@ -145,6 +160,38 @@ public class Turn implements Parcelable {
      */
     public void setStationId(String stationId) {
         this.stationId = stationId;
+    }
+
+    /**
+     * Devuelve si el turno es para atención preferencial.
+     * @return true si es para preferencial.
+     */
+    public boolean isForPreferentialAttention() {
+        return isForPreferentialAttention;
+    }
+
+    /**
+     * Fija si el turno es para preferencial
+     * @param forPreferentialAttention
+     */
+    public void setForPreferentialAttention(boolean forPreferentialAttention) {
+        isForPreferentialAttention = forPreferentialAttention;
+    }
+
+    public boolean isForMemberships() {
+        return isForMemberships;
+    }
+
+    public void setForMemberships(boolean forMemberships) {
+        isForMemberships = forMemberships;
+    }
+
+    public String getMembership() {
+        return membership;
+    }
+
+    public void setMembership(String membership) {
+        this.membership = membership;
     }
 
     public Turn(Parcel in){

@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.turnosandroid_pucmm.Models.Company;
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.R;
@@ -18,8 +17,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class CompanyDetailsActivity extends AppCompatActivity {
@@ -109,6 +106,7 @@ public class CompanyDetailsActivity extends AppCompatActivity {
                         // Convierte la data y la lleva a tu modelo
                         CompanyId tempCompany = document.toObject(CompanyId.class);
                         mCompany = tempCompany;
+                        mCompany.setId(companyId);
 
                         //Muestra la información en pantalla
                         setOfficeDetails();
