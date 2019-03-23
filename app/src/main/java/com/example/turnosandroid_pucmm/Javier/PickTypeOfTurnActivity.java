@@ -14,7 +14,6 @@ import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Membership;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.Models.Turn;
-import com.example.turnosandroid_pucmm.Models.UserId;
 import com.example.turnosandroid_pucmm.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -119,10 +118,10 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         Timestamp createdAt = Timestamp.now();
         List<Office> offices = mCompany.getOffices();
 
-        Log.d("SERVICE: ", serviceSelected);
+        Log.d("SERVICE: ", createdAt.toString());
 
 
-        Turn newTurn = new Turn(Integer.toString(idTurn), createdAt, new UserId(), serviceSelected);
+        Turn newTurn = new Turn(Integer.toString(idTurn),createdAt,"Carlos","Perez","001",serviceSelected, "01", false, false,"");
 
 
         mOffice.getTurns().add(newTurn);
