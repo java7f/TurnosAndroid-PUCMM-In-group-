@@ -37,7 +37,7 @@ public class CompanyDetailsActivity extends AppCompatActivity {
     private static final String TAG = "CompanyDetailsActivity";
 
     //Buttons
-    private Button requestTurn, cancelTurn;
+    private Button requestTurn;
 
     //Text fields
     private TextView companyName, subsidiaryName, address, schedule, time;
@@ -60,7 +60,6 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         intent = getIntent();
         mCompany = new CompanyId();
         requestTurn = findViewById(R.id.requestTurn);
-        cancelTurn = findViewById(R.id.cancelTurn);
         companyName = findViewById(R.id.companyName);
         subsidiaryName = findViewById(R.id.subsidiaryName);
         address = findViewById(R.id.address);
@@ -87,7 +86,6 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         super.onResume();
     }
 
-
     /**
      * Prueba de paso de un activity a otro. Se llama cuando se presiona el botón de Pedir Turno.
      */
@@ -97,7 +95,6 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         goToServices.putExtra("office", mOffice);
         startActivity(goToServices);
     }
-
 
     private void fetchData() {
         mFirestore.collection("companies").document(companyId)
@@ -140,7 +137,10 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         for (Office office : companyOffices)
         {
             if(office.getId().equals(officeId))
+            {
                 mOffice = office;
+                break;
+            }
         }
 
         int turnsQuantity = mOffice.getTurns().size();

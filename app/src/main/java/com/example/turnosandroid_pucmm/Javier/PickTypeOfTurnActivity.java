@@ -44,6 +44,9 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
 
     CompanyId mCompany;
     Office mOffice;
+
+    Turn newTurn;
+
     //Firebase instance
     private FirebaseFirestore mFirestore;
 
@@ -96,6 +99,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         Intent goToCompany = new Intent(this, ShowTicketInfoActivity.class);
         goToCompany.putExtra("company", mCompany);
         goToCompany.putExtra("office", mOffice);
+        goToCompany.putExtra("turn", newTurn);
         startActivity(goToCompany);
         finish();
     }
@@ -129,7 +133,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
 
         Log.d("SERVICE: ", createdAt.toString());
 
-        Turn newTurn = new Turn(Integer.toString(idTurn),createdAt, user ,serviceSelected, "01", false, false,"");
+        newTurn = new Turn(Integer.toString(idTurn),createdAt, user ,serviceSelected, "01", false, false,"");
 
         mOffice.getTurns().add(newTurn);
 
@@ -138,8 +142,8 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
             if(offices.get(i).getId().equals(mOffice.getId()))
             {
                 mCompany.getOffices().set(i, mOffice);
+                break;
             }
-
         }
 
         DocumentReference document = mFirestore.collection("companies").document(mCompany.getId());
