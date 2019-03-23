@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.View;
 
 import com.example.turnosandroid_pucmm.Javier.CompanyDetailsActivity;
+import com.example.turnosandroid_pucmm.Javier.ShowTicketInfoActivity;
 import com.example.turnosandroid_pucmm.Models.Company;
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
@@ -27,11 +28,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class DashboardActivity extends AppCompatActivity {
 
     //Company for testing
-    private List<Company> mCompanies;
+    private List<CompanyId> mCompanies;
 
     //Firebase instance
     private FirebaseFirestore mFirestore;
@@ -60,9 +60,7 @@ public class DashboardActivity extends AppCompatActivity {
         mCompanies = new ArrayList<>();
         officeCompanyLinker = new HashMap<>();
 
-
         fetchData();
-
     }
 
     @Override
@@ -96,55 +94,34 @@ public class DashboardActivity extends AppCompatActivity {
                             adapter.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    selectedOffice = adapter.getListOffices().get
-                                            (recycler.getChildAdapterPosition(v));
-                                    Intent intent = new Intent(DashboardActivity.this, CompanyDetailsActivity.class);
-                                    String officeID = selectedOffice.getId();
-                                    intent.putExtra("officeId", officeID);
-                                    intent.putExtra("companyId", officeCompanyLinker.get(officeID));
-                                    startActivity(intent);
+                                    if(ShowTicketInfoActivity.isActive)
+                                        goToShowTickedInfo(v);
+                                    else
+                                        goToCompanyDetails(v);
                                 }
                             });
-
 
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });
+    }
 
+    public void goToCompanyDetails(View v)
+    {
+        selectedOffice = adapter.getListOffices().get
+                (recycler.getChildAdapterPosition(v));
+        Intent intent = new Intent(DashboardActivity.this, CompanyDetailsActivity.class);
+        String officeID = selectedOffice.getId();
+        intent.putExtra("officeId", officeID);
+        intent.putExtra("companyId", officeCompanyLinker.get(officeID));
+        startActivity(intent);
+    }
 
-       /* mFirestore.collection("companies").document("wRjpAUyr25ZYiLtUL110")
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-
-                        // Convierte la data y la lleva a tu modelo
-                        mCompany = document.toObject(Company.class);
-                        adapter = new AdapterDatos(mCompany);
-
-                        adapter.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(DashboardActivity.this, CompanyDetailsActivity.class);
-                                intent.putExtra("officeId","");
-                                startActivity(intent);
-                            }
-                        });
-
-                        recycler.setAdapter(adapter);
-
-
-                    } else {
-                        Log.d(TAG, "No such document");
-                    }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
-                }
-            }
-        });*/
+    public void goToShowTickedInfo(View v)
+    {
+        Intent intent = new Intent(DashboardActivity.this, ShowTicketInfoActivity.class);
+        startActivity(intent);
     }
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.turnosandroid_pucmm.Models.Company;
+import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.R;
 
@@ -19,12 +20,12 @@ public class AdapterDatos
         extends RecyclerView.Adapter<AdapterDatos.ViewHolderDatos>
         implements View.OnClickListener {
 
-    private List<Company> companies;
+    private List<CompanyId> companies;
     private List<Office> listOffices;
     private View.OnClickListener listener;
     private int officesAcum, companyIndex;
 
-    public AdapterDatos(List<Company> companies) {
+    public AdapterDatos(List<CompanyId> companies) {
         this.companies = companies;
         companyIndex = 0;
         officesAcum = companies.get(0).getOffices().size();
