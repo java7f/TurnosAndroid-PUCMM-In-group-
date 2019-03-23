@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#000000"
-    android:backgroundTint="@color/blanco"
+    android:backgroundTint="@color/AzulToolbar"
     android:elevation="4dp"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    app:titleTextColor="@color/blanco"/>
+

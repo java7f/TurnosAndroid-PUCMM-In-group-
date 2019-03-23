@@ -51,9 +51,7 @@ public class PickScheduleActivity extends AppCompatActivity {
     }
 
     public void goToCompany(){
-        Intent intent = getIntent();
         Intent goToCompany = new Intent(this, CompanyDetailsActivity.class);
-        goToCompany.putExtra("hide", intent.getStringExtra("hide"));
         startActivity(goToCompany);
     }
 }

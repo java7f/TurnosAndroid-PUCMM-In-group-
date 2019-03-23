@@ -36,19 +36,9 @@ public class Turn implements Parcelable {
     private Timestamp createdAt;
 
     /**
-     * Usuario que crea el turno.
+     * Usuario que pide el turno
      */
-    private String firstName;
-
-    /**
-     * Primer Apellido
-     */
-    private String lastName;
-
-    /**
-     * ID de la persona
-     */
-    private String id;
+    private UserId createdFor;
 
     /**
      * Tipo de servicio solicitado.
@@ -85,22 +75,21 @@ public class Turn implements Parcelable {
         isForPreferentialAttention = false;
         isForMemberships = false;
         membership = "";
-        lastName = "";
-        firstName = "";
-        id = "";
+        createdFor = new UserId();
+
     }
 
-    public Turn(String turnId, Timestamp createdAt, String firstName, String lastName, String id, String typeOfService, String stationId, boolean isForPreferentialAttention, boolean isForMemberships, String membership) {
+    public Turn(String turnId, Timestamp createdAt, UserId user,
+                String typeOfService, String stationId, boolean isForPreferentialAttention,
+                boolean isForMemberships, String membership) {
         this.turnId = turnId;
         this.createdAt = createdAt;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.id = id;
         this.typeOfService = typeOfService;
         this.stationId = stationId;
         this.isForPreferentialAttention = isForPreferentialAttention;
         this.isForMemberships = isForMemberships;
         this.membership = membership;
+        this.createdFor = user;
     }
 
 
@@ -201,28 +190,12 @@ public class Turn implements Parcelable {
         this.membership = membership;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public UserId getCreatedFor() {
+        return createdFor;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setCreatedFor(UserId createdFor) {
+        this.createdFor = createdFor;
     }
 
     public Turn(Parcel in){
@@ -233,9 +206,7 @@ public class Turn implements Parcelable {
         this.isForPreferentialAttention = in.readByte() != 0;
         this.isForMemberships = in.readByte() != 0;
         this.membership = in.readString();
-        this.firstName = in.readString();
-        this.lastName = in.readString();
-        this.id = in.readString();
+        this.createdFor = in.readParcelable(UserId.class.getClassLoader());
     }
 
     @Override
@@ -252,8 +223,6 @@ public class Turn implements Parcelable {
         dest.writeInt(isForPreferentialAttention ? 1 : 0);
         dest.writeInt(isForMemberships ? 1 : 0);
         dest.writeString(membership);
-        dest.writeString(firstName);
-        dest.writeString(lastName);
-        dest.writeString(id);
+        dest.writeParcelable(createdFor, flags);
     }
 }
