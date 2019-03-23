@@ -1,5 +1,6 @@
 package com.example.turnosandroid_pucmm.Javier;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AskTicketActivity extends AppCompatActivity {
+
+    public static Activity ata;
 
     /**
      * Lista que contendrá los servicios según la sucursal.
@@ -39,6 +42,8 @@ public class AskTicketActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ata = this;
         setContentView(R.layout.activity_ask_ticket);
         setTitle("Seleccione el servicio");
 

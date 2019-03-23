@@ -27,6 +27,12 @@ public class UserId extends User implements Parcelable {
         id = "";
     }
 
+    public UserId(String id, String firstName, String lastName, String emailAddress, Role roles)
+    {
+        super(firstName, lastName, emailAddress, roles);
+        this.id = id;
+    }
+
     /**
      * Devuelve el ID del usuario.
      * @return String con ID.

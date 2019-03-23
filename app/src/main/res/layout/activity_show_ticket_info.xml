@@ -85,7 +85,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/time"
+                android:id="@+id/ticketNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -95,6 +95,7 @@
                 android:textSize="70sp"/>
 
             <TextView
+                android:id="@+id/minutesLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Minutos Aproximadamente"
@@ -103,16 +104,6 @@
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/requestTurn"
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="500dp"
-            android:backgroundTint="#2150de"
-            android:text="Pedir turno"
-            android:textColor="#ffffff" />
 
         <Button
             android:id="@+id/cancelTurn"
@@ -124,8 +115,7 @@
             android:backgroundTint="#b00020"
             android:onClick="cancelTurn"
             android:text="Cancelar turno"
-            android:textColor="#ffffff"
-            android:visibility="invisible" />
+            android:textColor="#ffffff" />
 
     </RelativeLayout>
 </ScrollView>
