@@ -7,33 +7,21 @@
     android:orientation="vertical"
     tools:context=".JuanLuis.AboutActivity">
 
-
-    <TextView
-        android:id="@+id/nosotros"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:text="About Us"
-        android:textColor="#66B9F9" />
+    <include
+        android:id="@+id/idToolbarAbout"
+        layout="@layout/toolbar1"/>
 
     <TextView
         android:id="@+id/descripcion"
         android:layout_width="332dp"
-        android:layout_height="274dp"
+        android:layout_height="468dp"
         android:layout_marginStart="38dp"
         android:layout_marginTop="59dp"
         android:layout_marginEnd="37dp"
         android:layout_marginBottom="112dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-    <Button
-        android:id="@+id/contactenos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:text="Contactarnos"
-        android:textColor="@color/blanco"
-        android:textAllCaps="false"/>
+        android:lineSpacingExtra="10sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textSize="20sp" />
 
 
 </LinearLayout>

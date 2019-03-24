@@ -10,10 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.turnosandroid_pucmm.Javier.CompanyDetailsActivity;
 import com.example.turnosandroid_pucmm.Javier.ShowTicketInfoActivity;
+import com.example.turnosandroid_pucmm.JuanLuis.AboutActivity;
+import com.example.turnosandroid_pucmm.JuanLuis.UserProfileActivity;
 import com.example.turnosandroid_pucmm.Models.Company;
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
@@ -68,6 +71,28 @@ public class DashboardActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.idSearch:
+                return true;
+            case R.id.idProfile:
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.idFilter:
+                return true;
+            case R.id.idAbout:
+                Intent intent2 = new Intent(this, AboutActivity.class);
+                startActivity(intent2);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
     }
 
     public void fetchData() {

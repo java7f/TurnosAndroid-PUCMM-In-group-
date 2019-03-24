@@ -1,113 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".JuanLuis.UserProfileActivity">
+    android:orientation="vertical"
+    tools:context=".JuanLuis.AboutActivity">
+    <include
+        android:id="@+id/idToolbarUserProfile"
+        layout="@layout/toolbar1" />
 
-    <TextView
-        android:id="@+id/Nombre_Perfil"
-        android:layout_width="151dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="51dp"
-        android:layout_marginTop="69dp"
-        android:layout_marginEnd="598dp"
-        android:layout_marginBottom="50dp"
-        android:text="Nombre:"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="213dp"
+        android:layout_marginTop="20dp">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="519dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="51dp"
-        android:layout_marginTop="29dp"
-        android:layout_marginEnd="230dp"
-        android:layout_marginBottom="50dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/Correo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Nombre_Perfil" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/Correo"
-        android:layout_width="151dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="51dp"
-        android:layout_marginTop="118dp"
-        android:layout_marginEnd="598dp"
-        android:layout_marginBottom="29dp"
-        android:text="Correo:"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/editText2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+            <TextView
+                android:id="@+id/textNombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="20dp"
+                android:text="Nombre:"
+                android:textStyle="bold|italic" />
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="530dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="51dp"
-        android:layout_marginTop="29dp"
-        android:layout_marginEnd="219dp"
-        android:layout_marginBottom="50dp"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        app:layout_constraintBottom_toTopOf="@+id/Contrasena"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Correo" />
+            <EditText
+                android:id="@+id/editTxtNombre"
+                android:layout_width="246dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:padding="20dp"
+                android:text="Juan Luis Mejia" />
+        </TableRow>
 
-    <TextView
-        android:id="@+id/Contrasena"
-        android:layout_width="151dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="51dp"
-        android:layout_marginTop="114dp"
-        android:layout_marginBottom="29dp"
-        android:text="Password:"
-        app:autoSizeTextType="uniform"
-        app:layout_constraintBottom_toTopOf="@+id/editText3"
-        app:layout_constraintEnd_toStartOf="@+id/editText3"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editText3"
-        android:layout_width="533dp"
-        android:layout_height="58dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="29dp"
-        android:layout_marginEnd="219dp"
-        android:layout_marginBottom="149dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toTopOf="@+id/Editar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Contrasena" />
+            <TextView
+                android:id="@+id/textEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text="Email:"
+                android:textStyle="bold|italic" />
 
-    <Button
-        android:id="@+id/Editar"
-        android:layout_width="259dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="271dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="270dp"
-        android:layout_marginBottom="50dp"
-        android:text="Editar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+            <EditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="246dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:padding="20dp"
+                android:text="juanluismejia@gmail.com" />
+        </TableRow>
 
-</android.support.constraint.ConstraintLayout>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textRol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text="Rol:"
+                android:textStyle="bold|italic" />
+
+            <EditText
+                android:id="@+id/editTextRol"
+                android:layout_width="246dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:padding="20dp"
+                android:text="Administrador" />
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>

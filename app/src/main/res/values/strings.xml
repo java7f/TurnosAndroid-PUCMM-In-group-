@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Turnos</string>
+    <string name="about">Sobre Nosotros</string>
+    <string name="profile">Mi perfil</string>
 </resources>
