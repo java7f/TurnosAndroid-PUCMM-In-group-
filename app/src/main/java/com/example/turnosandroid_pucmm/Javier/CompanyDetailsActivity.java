@@ -1,5 +1,10 @@
 package com.example.turnosandroid_pucmm.Javier;
 
+/**
+ * @file CompanyDetailsActivity.java
+ * @brief Fuente del activity CompanyDetails.
+ */
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,19 +26,27 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+/**
+ * Clase enlazada con el layout de detalles de la sucursal.
+ */
 public class CompanyDetailsActivity extends AppCompatActivity {
 
-    //Company for testing
+    //Company a mostrar.
     private CompanyId mCompany;
 
+    //Sucursal seleccionada.
     private Office mOffice;
 
+    //ID de la compañía.
     private String companyId;
 
+    //ID de la sucursal.
     private String officeId;
 
     //Firebase instance
     private FirebaseFirestore mFirestore;
+
+    //TAG para el log.
     private static final String TAG = "CompanyDetailsActivity";
 
     //Buttons
@@ -44,21 +57,19 @@ public class CompanyDetailsActivity extends AppCompatActivity {
 
     public static Activity cda;
 
+    //Toolbar
     Toolbar toolbar;
+
+    //Intent
     Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        cda = this;
+        //Enlaces con los layouts
         setContentView(R.layout.activity_company_details);
-
         toolbar = findViewById(R.id.idToolbarCompany);
-        setSupportActionBar(toolbar);
-
-        intent = getIntent();
-        mCompany = new CompanyId();
         requestTurn = findViewById(R.id.requestTurn);
         companyName = findViewById(R.id.companyName);
         subsidiaryName = findViewById(R.id.subsidiaryName);
@@ -66,28 +77,31 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         schedule = findViewById(R.id.schedule);
         time = findViewById(R.id.time);
 
+        cda = this;
+
+        //Coloca el toolbar en la vista.
+        setSupportActionBar(toolbar);
+
+
+        intent = getIntent();
+        //Inicialización del company.
+        mCompany = new CompanyId();
+
+        //Obteniendo instancia de la base de datos.
         mFirestore = FirebaseFirestore.getInstance();
 
+        //Obteniendo los ID para buscar en la base de datos.
         companyId = intent.getStringExtra("companyId");
         officeId = intent.getStringExtra("officeId");
 
+        //Obteniendo la información en la base de datos.
         fetchData();
 
     }
 
-    @Override
-    protected void onResume() {
-        intent = getIntent();
-        int test = intent.getIntExtra("hide",0);
-        if(intent.getExtras() != null && test == 1)
-        {
-            requestTurn.setEnabled(false);
-        }
-        super.onResume();
-    }
 
     /**
-     * Prueba de paso de un activity a otro. Se llama cuando se presiona el botón de Pedir Turno.
+     * Paso de un activity a otro. Se llama cuando se presiona el botón de Pedir Turno.
      */
     public void selectService(View viewServices){
         Intent goToServices = new Intent(this, AskTicketActivity.class);
@@ -96,6 +110,10 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         startActivity(goToServices);
     }
 
+    /**
+     * Función que busca los datos de la empresa en la base de datos para mostrar su información en
+     * pantalla.
+     */
     private void fetchData() {
         mFirestore.collection("companies").document(companyId)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -113,6 +131,7 @@ public class CompanyDetailsActivity extends AppCompatActivity {
                         //Muestra la información en pantalla
                         setOfficeDetails();
 
+                        //Acción del click en el botón.
                         requestTurn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -129,11 +148,16 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Función que se encanrga de tomar la data obtenida para colocar
+     * la información correspondiente a la sucursal.
+     */
     private void setOfficeDetails()
     {
         int opensAtHours, opensAtMinutes, closesAtHours, closesAtMinutes;
         List<Office> companyOffices = mCompany.getOffices();
 
+        //Obteniendo la sucursal correspondiente al ID conseguido en los extras.
         for (Office office : companyOffices)
         {
             if(office.getId().equals(officeId))
@@ -160,6 +184,13 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         time.setText(waitingTime);
     }
 
+    /**
+     * Función que recibe la hora y los minutos y las coloca en
+     * el formato adecuado.
+     * @param hour Hora
+     * @param minutes Minutos
+     * @return Cadena con la hora en formato 12 horas.
+     */
     private String formatHour(int hour, int minutes)
     {
 
@@ -174,6 +205,12 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Función que recibe los minutos y devuelve
+     * su formato correcto.
+     * @param minutes Minutos.
+     * @return Cadena con minutos en formato.
+     */
     private String formatMinutes(int minutes)
     {
         if(minutes == 0)

@@ -1,10 +1,14 @@
 package com.example.turnosandroid_pucmm.Javier;
 
+/**
+ * @file PickTypeOfTurnActivity.java
+ * @brief Fuente del activity PickTypeOfTurn.
+ */
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,30 +31,45 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Clase enlazada al layout de seleccionar el tipo de turno.
+ */
 public class PickTypeOfTurnActivity extends AppCompatActivity {
 
     public static Activity ptota;
     /**
      * Lista que contendrá los horarios disponibles.
      */
-    ListView turnType;
+    private ListView turnType;
 
     /**
      * Adaptador.
      */
-    ArrayAdapter adapter;
+    private ArrayAdapter adapter;
 
-    List<String> queues;
+    /**
+     * Tipos de turnos.
+     */
+    private List<String> queues;
 
-    CompanyId mCompany;
-    Office mOffice;
+    /**
+     * Compañía y sucursal donde se registrará el turno.
+     */
+    private CompanyId mCompany;
+    private Office mOffice;
 
-    Turn newTurn;
+    /**
+     * Turno a crear.
+     */
+    private Turn newTurn;
 
     //Firebase instance
     private FirebaseFirestore mFirestore;
 
-    String serviceSelected;
+    /**
+     * Nombre del servicio seleccionado.
+     */
+    private String serviceSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +87,11 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         mOffice = intent.getParcelableExtra("office");
         serviceSelected = intent.getStringExtra("service");
 
+        //Se obtiene si la sucursal puede atender preferenciales y/o membresías.
         boolean worksWithMemberships = mOffice.getHasStationsForMemberships(),
                 worksWithPreferentials = mOffice.getHasStationsForPreferential();
 
+        //TODO: ¿Qué clase de turnos están disponibles en esta sucursal?
         getTurnOptions(worksWithMemberships,worksWithPreferentials);
 
         //Init adapter
@@ -82,19 +103,22 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         //Set adapter
         turnType.setAdapter(adapter);
 
-        System.out.println("COMPANY ID = " + mCompany.getId());
+        //Acción cuando se da click en un item de la lista.
         turnType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 registerTurn();
-                goToCompany();
+                goToTicketInfo();
             }
         });
 
 
     }
 
-    public void goToCompany(){
+    /**
+     * Traslado al activity de mostrar información del ticket.
+     */
+    public void goToTicketInfo(){
 
         Intent goToCompany = new Intent(this, ShowTicketInfoActivity.class);
         goToCompany.putExtra("company", mCompany);
@@ -104,6 +128,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         finish();
     }
 
+    //TODO: lógica que obtiene los tipos de turnos disponibles.
     private void getTurnOptions(boolean worksWithMemberships, boolean worksWithPreferentials)
     {
 
@@ -122,21 +147,34 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Acción de registrar un turno en la base de datos.
+     */
     private void registerTurn()
     {
+        //Id random para el ticket. TODO: Restringir el rango.
         Random random = new Random();
         int idTurn = random.nextInt();
+
+        //Tiempo de creación.
         Timestamp createdAt = Timestamp.now();
+        //Lista de sucursales.
         List<Office> offices = mCompany.getOffices();
+        //Id random para el usuario mientras la lógica sigue siendo desarrollada.
         String userId = Integer.toString(random.nextInt());
+        //Creación del usuario.
         UserId user = new UserId(userId, "Juanito", "Perez", "hola@hotmail.com", new Role());
 
-        Log.d("SERVICE: ", createdAt.toString());
 
+        //Creación del turno. //TODO: Realizar lógica de asignar a la estación correcta.
         newTurn = new Turn(Integer.toString(idTurn),createdAt, user ,serviceSelected, "01", false, false,"");
 
+        //Añade el nuevo turno a la cola localmente.
         mOffice.getTurns().add(newTurn);
 
+        /**
+         * Se busca la sucursal y se reemplaza por ella misma con el nuevo turno.
+         */
         for(int i=0; i<offices.size(); i++)
         {
             if(offices.get(i).getId().equals(mOffice.getId()))
@@ -146,6 +184,10 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
             }
         }
 
+        /**
+         * Update de las sucursales con el nuevo turno registrado.
+         * TODO: Mostrar mensaje de que el registro fue exitoso.
+         */
         DocumentReference document = mFirestore.collection("companies").document(mCompany.getId());
         document.update("offices", offices)
                 .addOnSuccessListener(new OnSuccessListener< Void >() {

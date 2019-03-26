@@ -91,6 +91,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:text="7"
+                android:textColor="@color/negro"
                 android:textAlignment="center"
                 android:textSize="70sp"/>
 
@@ -98,6 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Minutos Aproximadamente"
+                android:textColor="@color/negro"
                 android:textSize="12sp"/>
 
 
@@ -113,19 +115,6 @@
             android:backgroundTint="#2150de"
             android:text="Pedir turno"
             android:textColor="#ffffff" />
-
-        <Button
-            android:id="@+id/cancelTurn"
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="560dp"
-            android:backgroundTint="#b00020"
-            android:onClick="cancelTurn"
-            android:text="Cancelar turno"
-            android:textColor="#ffffff"
-            android:visibility="invisible" />
 
     </RelativeLayout>
 </ScrollView>

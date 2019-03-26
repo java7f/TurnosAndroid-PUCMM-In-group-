@@ -111,9 +111,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
-            android:layout_marginTop="560dp"
+            android:layout_marginTop="510dp"
             android:backgroundTint="#b00020"
-            android:onClick="cancelTurn"
             android:text="Cancelar turno"
             android:textColor="#ffffff" />
 

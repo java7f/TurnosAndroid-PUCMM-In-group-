@@ -1,5 +1,10 @@
 package com.example.turnosandroid_pucmm.Javier;
 
+/**
+ * @file AskTicketActivity.java
+ * @brief Fuente del activity AskTicket.
+ */
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +22,9 @@ import com.example.turnosandroid_pucmm.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase enlazada al layout de seleccionar el servicio para un turno.
+ */
 public class AskTicketActivity extends AppCompatActivity {
 
     public static Activity ata;
@@ -31,10 +39,21 @@ public class AskTicketActivity extends AppCompatActivity {
      */
     ArrayAdapter adapter;
 
+    /**
+     * Compañía y sucursal seleccionada.
+     */
     CompanyId mCompany;
     Office mOffice;
 
+    /**
+     * Lista de servicios presentes en la sucursal.
+     */
     List<Service> services;
+
+    /**
+     * Lista con los nombres de los servicios que utilizará
+     * el adapter del ListView.
+     */
     List<String> servicesName;
 
     Intent intent;
@@ -45,14 +64,17 @@ public class AskTicketActivity extends AppCompatActivity {
 
         ata = this;
         setContentView(R.layout.activity_ask_ticket);
+
+        //Título del toolbar.
         setTitle("Seleccione el servicio");
 
         servicesName = new ArrayList<>();
         intent =  getIntent();
 
+        //Obtención de la compañía, sucursal y la lista de servicios.
         mCompany = intent.getParcelableExtra("company");
         mOffice = intent.getParcelableExtra("office");
-        services =  mCompany.getServices();
+        services =  mOffice.getServices();
 
         for(Service service : services)
             servicesName.add(service.getName());
@@ -77,6 +99,10 @@ public class AskTicketActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Traslado al activity de seleccionar el tipo de turno.
+     * @param position Posición del item seleccionado en la lista.
+     */
     public void selectSchedule(int position){
         Intent goToSchedule = new Intent(this, PickTypeOfTurnActivity.class);
         goToSchedule.putExtra("company", mCompany);

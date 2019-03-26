@@ -12,36 +12,32 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.turnosandroid_pucmm.Jesse.DashboardActivity;
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
-import com.example.turnosandroid_pucmm.Models.Role;
 import com.example.turnosandroid_pucmm.Models.Turn;
-import com.example.turnosandroid_pucmm.Models.UserId;
 import com.example.turnosandroid_pucmm.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
-import java.util.Random;
 
 public class ShowTicketInfoActivity extends AppCompatActivity {
 
     public static final String SHARED_PREFS = "sharedPrefs";
 
 
-    //Company for testing
+    //Company
     private CompanyId mCompany;
 
+    //Sucursal.
     private Office mOffice;
 
+    //IDs de la empresa y sucursal.
     private String companyId;
-
     private String officeId;
 
     //Firebase instance
@@ -49,6 +45,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
 
     private static final String TAG = "CompanyDetailsActivity";
 
+    //Flag para identificar si existe una instancia activa de este activity.
     public static boolean isActive;
 
     //Buttons
@@ -60,40 +57,51 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
     //Text from SharedPreferences
     String compName, subName, addr, sched, waitingTime, turnId;
 
+    //Toolbar
     Toolbar toolbar;
     Intent intent;
 
+    //Turno asignado.
     Turn currentTurn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         isActive = true;
+
+        //Finalización de los activities anteriores.
         CompanyDetailsActivity.cda.finish();
         AskTicketActivity.ata.finish();
         PickTypeOfTurnActivity.ptota.finish();
 
+        //Enlaces con los layouts
         setContentView(R.layout.activity_show_ticket_info);
-
         toolbar = findViewById(R.id.idToolbarCompany);
-        setSupportActionBar(toolbar);
-
-        intent = getIntent();
-        mCompany = new CompanyId();
         cancelTurn = findViewById(R.id.cancelTurn);
         companyName = findViewById(R.id.companyName);
         subsidiaryName = findViewById(R.id.subsidiaryName);
         address = findViewById(R.id.address);
         schedule = findViewById(R.id.schedule);
         time = findViewById(R.id.ticketNumber);
+        setSupportActionBar(toolbar);
 
+        intent = getIntent();
+        mCompany = new CompanyId();
+
+        //Instancia de la base de datos.
         mFirestore = FirebaseFirestore.getInstance();
 
+        //Obteniendo la compañía, sucursal y el turno creado.
         mCompany = intent.getParcelableExtra("company");
         mOffice = intent.getParcelableExtra("office");
         currentTurn = intent.getParcelableExtra("turn");
 
+        /**
+         * Si la compañía es nula, quiere decir que ya hay un turno asignado,
+         * por lo que se reestablece el estado anterior de la pantalla.
+         * En caso contrario, se acaba de crear el turno, or lo que se
+         * busca la data en la base de datos y se salva el estado actual.
+         */
         if(mCompany == null)
         {
             loadData();
@@ -108,6 +116,10 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Cancelación del turno y traslado al activity de detalles de compañía.
+     * @param viewServices View.
+     */
     public void cancelTurn(View viewServices){
         if(mCompany == null)
             getCompanyAndDeleteTurn();
@@ -122,6 +134,9 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Si la compañía era nula, buscarla en la base de datos y borrar el turno.
+     */
     public void getCompanyAndDeleteTurn()
     {
         mFirestore.collection("companies").document(companyId)
@@ -153,6 +168,9 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Lógica de eliminar un turno.
+     */
     private void deleteTurn()
     {
         if(currentTurn != null)
@@ -229,7 +247,9 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * Coloca la información correspondiente en pantalla.
+     */
     private void setOfficeDetails()
     {
         int opensAtHours, opensAtMinutes, closesAtHours, closesAtMinutes;
@@ -280,6 +300,9 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
             return Integer.toString(minutes);
     }
 
+    /**
+     * SharedPreferences save data.
+     */
     public void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -300,6 +323,9 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * SharedPreferences load data.
+     */
     public void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         compName = sharedPreferences.getString("compName", "");
@@ -312,6 +338,9 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         officeId = sharedPreferences.getString("officeId", "");
     }
 
+    /**
+     * SharedPreferences update de la data.
+     */
     public void updateViews() {
         companyName.setText(compName);
         subsidiaryName.setText(subName);
