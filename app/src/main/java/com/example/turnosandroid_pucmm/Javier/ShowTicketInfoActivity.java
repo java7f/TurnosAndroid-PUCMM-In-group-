@@ -49,10 +49,10 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
     public static boolean isActive;
 
     //Buttons
-    private Button requestTurn, cancelTurn;
+    private Button cancelTurn;
 
     //Text fields
-    private TextView companyName, subsidiaryName, address, schedule, time;
+    private TextView companyName, subsidiaryName, address, schedule, ticket, time, station;
 
     //Text from SharedPreferences
     String compName, subName, addr, sched, waitingTime, turnId;
@@ -82,7 +82,9 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         subsidiaryName = findViewById(R.id.subsidiaryName);
         address = findViewById(R.id.address);
         schedule = findViewById(R.id.schedule);
-        time = findViewById(R.id.ticketNumber);
+        ticket = findViewById(R.id.ticketNumber);
+        time = findViewById(R.id.minutesLeft);
+        station = findViewById(R.id.stationId);
         setSupportActionBar(toolbar);
 
         intent = getIntent();
@@ -137,8 +139,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
     /**
      * Si la compañía era nula, buscarla en la base de datos y borrar el turno.
      */
-    public void getCompanyAndDeleteTurn()
-    {
+    public void getCompanyAndDeleteTurn() {
         mFirestore.collection("companies").document(companyId)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -171,8 +172,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
     /**
      * Lógica de eliminar un turno.
      */
-    private void deleteTurn()
-    {
+    public void deleteTurn() {
         if(currentTurn != null)
             turnId = currentTurn.getTurnId();
         else
@@ -275,7 +275,9 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         subsidiaryName.setText(mOffice.getName());
         address.setText(mOffice.getAddress());
         schedule.setText("Horario: " + formatHour(opensAtHours, opensAtMinutes) + " - " + formatHour(closesAtHours, closesAtMinutes));
-        time.setText(waitingTime);
+        ticket.setText(currentTurn.getTurnId());
+        time.setText(waitingTime + " Minutos apróx.");
+        station.setText(currentTurn.getStationId());
     }
 
     private String formatHour(int hour, int minutes)
@@ -314,7 +316,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         editor.putString("address", address.getText().toString());
         editor.putString("schedule", schedule.getText().toString());
         editor.putString("turnId", currentTurn.getTurnId());
-        editor.putString("time", time.getText().toString());
+        editor.putString("ticket", ticket.getText().toString());
         editor.putString("companyId", mCompany.getId());
         editor.putString("officeId", mOffice.getId());
 
@@ -333,7 +335,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         addr = sharedPreferences.getString("address", "");
         sched = sharedPreferences.getString("schedule", "");
         turnId = sharedPreferences.getString("turnId", "");
-        waitingTime = sharedPreferences.getString("time", "");
+        waitingTime = sharedPreferences.getString("ticket", "");
         companyId = sharedPreferences.getString("companyId", "");
         officeId = sharedPreferences.getString("officeId", "");
     }
@@ -346,6 +348,6 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         subsidiaryName.setText(subName);
         address.setText(addr);
         schedule.setText(sched);
-        time.setText(waitingTime);
+        ticket.setText(waitingTime);
     }
 }

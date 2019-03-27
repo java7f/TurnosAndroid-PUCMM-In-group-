@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,6 +20,7 @@ import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Membership;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.Models.Role;
+import com.example.turnosandroid_pucmm.Models.Station;
 import com.example.turnosandroid_pucmm.Models.Turn;
 import com.example.turnosandroid_pucmm.Models.UserId;
 import com.example.turnosandroid_pucmm.R;
@@ -36,9 +38,11 @@ import java.util.Random;
  */
 public class PickTypeOfTurnActivity extends AppCompatActivity {
 
+    private static final String PREFERENTIAL_TURN = "Turno Preferencial";
+
     public static Activity ptota;
     /**
-     * Lista que contendrá los horarios disponibles.
+     * Lista que contendrá los turnos disponibles.
      */
     private ListView turnType;
 
@@ -51,6 +55,11 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
      * Tipos de turnos.
      */
     private List<String> queues;
+
+    /**
+     * Lista de estaciones posibles según el tipo de servicio seleccionado.
+     */
+    private List<String> stations;
 
     /**
      * Compañía y sucursal donde se registrará el turno.
@@ -71,6 +80,13 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
      */
     private String serviceSelected;
 
+    /**
+     * Tipo de turno seleccionado.
+     */
+    private String typeOfTurn;
+
+    private boolean worksWithMemberships, worksWithPreferentials;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +95,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pick_type_of_turn);
 
         queues = new ArrayList<>();
+        stations = new ArrayList<>();
         mFirestore = FirebaseFirestore.getInstance();
 
         Intent intent = getIntent();
@@ -88,8 +105,8 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         serviceSelected = intent.getStringExtra("service");
 
         //Se obtiene si la sucursal puede atender preferenciales y/o membresías.
-        boolean worksWithMemberships = mOffice.getHasStationsForMemberships(),
-                worksWithPreferentials = mOffice.getHasStationsForPreferential();
+        worksWithMemberships = mOffice.getHasStationsForMemberships();
+        worksWithPreferentials = mOffice.getHasStationsForPreferential();
 
         //TODO: ¿Qué clase de turnos están disponibles en esta sucursal?
         getTurnOptions(worksWithMemberships,worksWithPreferentials);
@@ -107,6 +124,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         turnType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                typeOfTurn = turnType.getItemAtPosition(i).toString();
                 registerTurn();
                 goToTicketInfo();
             }
@@ -128,7 +146,11 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         finish();
     }
 
-    //TODO: lógica que obtiene los tipos de turnos disponibles.
+    /**
+     * Llena la lista con los tipos de turnos.
+     * @param worksWithMemberships ¿La sucursal trabaja con membresías?
+     * @param worksWithPreferentials ¿La sucursal trabaja con clientes preferenciales?
+     */
     private void getTurnOptions(boolean worksWithMemberships, boolean worksWithPreferentials)
     {
 
@@ -137,7 +159,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         queues.add("Turno General");
 
         if(worksWithPreferentials)
-            queues.add("Turno Preferencial");
+            queues.add(PREFERENTIAL_TURN);
 
         if(worksWithMemberships)
         {
@@ -154,20 +176,21 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
     {
         //Id random para el ticket. TODO: Restringir el rango.
         Random random = new Random();
-        int idTurn = random.nextInt();
+        int idTurn = random.nextInt(101);
 
         //Tiempo de creación.
         Timestamp createdAt = Timestamp.now();
         //Lista de sucursales.
         List<Office> offices = mCompany.getOffices();
         //Id random para el usuario mientras la lógica sigue siendo desarrollada.
-        String userId = Integer.toString(random.nextInt());
+        String userId = "US01";
+
         //Creación del usuario.
         UserId user = new UserId(userId, "Juanito", "Perez", "hola@hotmail.com", new Role());
 
 
         //Creación del turno. //TODO: Realizar lógica de asignar a la estación correcta.
-        newTurn = new Turn(Integer.toString(idTurn),createdAt, user ,serviceSelected, "01", false, false,"");
+        newTurn = new Turn(Integer.toString(idTurn),createdAt, user ,serviceSelected, getStationForTurn(), false, false,"");
 
         //Añade el nuevo turno a la cola localmente.
         mOffice.getTurns().add(newTurn);
@@ -197,5 +220,55 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    //TODO: Hacer la lógica de asignar una estación al turno.
+    private String getStationForTurn() {
+
+        Random random = new Random();
+
+        Log.d("STATIONS NUMBER: ", Boolean.toString(isForPreferential(typeOfTurn)));
+
+        for (Station station : mOffice.getStations())
+        {
+            if(station.getTypeOfService().equals(serviceSelected))
+            {
+                if(isForPreferential(typeOfTurn) && station.getIsForPreferentialAttention())
+                    stations.add(station.getId());
+                else if(isForMemberships(typeOfTurn) && station.getIsForMemberships())
+                    stations.add(station.getId());
+                else if(!isForMemberships(typeOfTurn) && !isForPreferential(typeOfTurn))
+                    stations.add(station.getId());
+            }
+        }
+
+        Log.d("STATIONS AFTER: ", Integer.toString(stations.size()));
+        int station = random.nextInt(stations.size());
+        return stations.get(station);
+    }
+
+    /**
+     * Función que obtiene si el tipo de turno seleccionado es preferencial.
+     */
+    private boolean isForPreferential(String type)
+    {
+        return PREFERENTIAL_TURN.equals(type);
+    }
+
+    /**
+     * Función que obtiene si el tipo de turno seleccionado es una membresía.
+     */
+    private boolean isForMemberships(String type)
+    {
+        List<Membership> memberships =  mCompany.getMemberships();
+        String membershipName;
+
+        for(Membership membership : memberships){
+            membershipName = "Membresía " + membership.getName();
+            if(type.equals(membershipName))
+                return true;
+        }
+
+        return false;
     }
 }
