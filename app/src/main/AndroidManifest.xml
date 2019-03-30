@@ -11,18 +11,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Javier.PickTypeOfTurnActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Javier.CompanyDetailsActivity">
+        <activity
+            android:name=".Javier.PickTypeOfTurnActivity"
+            android:parentActivityName=".Javier.CompanyDetailsActivity"
+            android:screenOrientation="portrait">
 
         </activity>
         <activity
             android:name=".JuanLuis.UserProfileActivity"
             android:label="@string/profile"
             android:parentActivityName=".Jesse.DashboardActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".JuanLuis.CompanyProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".JuanLuis.AboutActivity"
@@ -32,19 +30,13 @@
 
         <activity
             android:name=".Jesse.DashboardActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleInstance">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".Javier.CompanyDetailsActivity"
             android:parentActivityName=".Jesse.DashboardActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Javier.AskTicketActivity"
             android:parentActivityName=".Javier.CompanyDetailsActivity"
@@ -54,20 +46,23 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Alexander.LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".Alexander.ForgotPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Javier.PickScheduleActivity"
-            android:parentActivityName=".Javier.CompanyDetailsActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Javier.ShowTicketInfoActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
     </application>
 

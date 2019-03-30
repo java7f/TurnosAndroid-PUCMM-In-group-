@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -85,6 +86,9 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
      */
     private String typeOfTurn;
 
+    //Toolbar
+    Toolbar toolbar;
+
     private boolean worksWithMemberships, worksWithPreferentials;
 
     @Override
@@ -93,6 +97,8 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
 
         ptota = this;
         setContentView(R.layout.activity_pick_type_of_turn);
+        toolbar = findViewById(R.id.idToolbarCompany);
+        setSupportActionBar(toolbar);
 
         queues = new ArrayList<>();
         stations = new ArrayList<>();
@@ -194,6 +200,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
 
         //Añade el nuevo turno a la cola localmente.
         mOffice.getTurns().add(newTurn);
+
 
         /**
          * Se busca la sucursal y se reemplaza por ella misma con el nuevo turno.

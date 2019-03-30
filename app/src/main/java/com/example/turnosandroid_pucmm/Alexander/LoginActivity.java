@@ -1,13 +1,15 @@
 package com.example.turnosandroid_pucmm.Alexander;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.turnosandroid_pucmm.Jesse.DashboardActivity;
 import com.example.turnosandroid_pucmm.R;
@@ -16,51 +18,39 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import android.os.Bundle;
-
-
-import android.text.TextUtils;
-
-import android.widget.Toast;
-
-
-
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;
-    private FirebaseAuth auth;
+    private Button btnSignup, btnLogin, btnReset, btnGuest;
 
-    private Button btnSignup, btnLogin, btnReset,btnGuest;
-
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //Get Firebase auth instance
-        auth = FirebaseAuth.getInstance();
 
-        if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
-            finish();
-        }
-
-        setContentView(R.layout.activity_login);
-        //asignacion de variables
+        // Asignacion de variables
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.passwordEditText);
-
         btnSignup = (Button) findViewById(R.id.btn_signup);
         btnLogin = (Button) findViewById(R.id.btn_login);
         btnReset = (Button) findViewById(R.id.btn_reset_password);
         btnGuest = (Button) findViewById(R.id.btn_guest);
 
-        //Get Firebase auth instance
-        auth = FirebaseAuth.getInstance();
+        // FirebaseAuth instance
+        mAuth = FirebaseAuth.getInstance();
 
-//button que va hacia vista register
+        // FirebaseUser instance
+        mUser = mAuth.getCurrentUser();
+
+        initViews();
+    }
+
+    private void initViews() {
+        //button que va hacia vista register
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-//button que va hacia la vista forgot password
+        //button que va hacia la vista forgot password
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,9 +95,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
 
-
                 //authenticate user
-                auth.signInWithEmailAndPassword(email, password)
+                mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -117,10 +106,9 @@ public class LoginActivity extends AppCompatActivity {
                                 if (!task.isSuccessful()) {
                                     // Si hubo algun error
 
-                                       // Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
-                                    }
-                                 else {
-                                     //si no hubo error ir al dashboard
+                                    // Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                } else {
+                                    //si no hubo error ir al dashboard
                                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -129,5 +117,32 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+            user.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+
+                        if (user != null) {
+
+                            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Log.d("reload", "guest user");
+                        }
+                    }
+                }
+            });
+        }
     }
 }

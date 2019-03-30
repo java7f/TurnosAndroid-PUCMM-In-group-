@@ -6,8 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".Javier.AskTicketActivity">
 
+    <include
+        android:id="@+id/idToolbarCompany"
+        layout="@layout/toolbar1" />
+
     <ListView
         android:id="@+id/services_list"
+        android:paddingTop="60dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"

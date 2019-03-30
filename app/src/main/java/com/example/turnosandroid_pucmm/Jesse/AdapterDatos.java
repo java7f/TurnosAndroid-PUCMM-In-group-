@@ -142,7 +142,6 @@ public class AdapterDatos
             idTiempo = itemView.findViewById(R.id.idTiempo);
             idCantidadTurnos = itemView.findViewById(R.id.idCantidadTurnos);
             linearDashboard = itemView.findViewById(R.id.linearDashboard);
-
         }
 
         /**

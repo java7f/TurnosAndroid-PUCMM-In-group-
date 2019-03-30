@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -56,6 +57,9 @@ public class AskTicketActivity extends AppCompatActivity {
      */
     List<String> servicesName;
 
+    //Toolbar
+    Toolbar toolbar;
+
     Intent intent;
 
     @Override
@@ -64,6 +68,8 @@ public class AskTicketActivity extends AppCompatActivity {
 
         ata = this;
         setContentView(R.layout.activity_ask_ticket);
+        toolbar = findViewById(R.id.idToolbarCompany);
+        setSupportActionBar(toolbar);
 
         //Título del toolbar.
         setTitle("Seleccione el servicio");

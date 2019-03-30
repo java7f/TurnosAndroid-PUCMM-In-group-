@@ -19,11 +19,13 @@ import android.widget.TextView;
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.R;
+import com.example.turnosandroid_pucmm.Robert.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,9 +68,9 @@ public class CompanyDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Enlaces con los layouts
         setContentView(R.layout.activity_company_details);
+
+        // Views
         toolbar = findViewById(R.id.idToolbarCompany);
         requestTurn = findViewById(R.id.requestTurn);
         companyName = findViewById(R.id.companyName);
@@ -82,8 +84,8 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         //Coloca el toolbar en la vista.
         setSupportActionBar(toolbar);
 
-
         intent = getIntent();
+
         //Inicialización del company.
         mCompany = new CompanyId();
 
@@ -96,18 +98,6 @@ public class CompanyDetailsActivity extends AppCompatActivity {
 
         //Obteniendo la información en la base de datos.
         fetchData();
-
-    }
-
-
-    /**
-     * Paso de un activity a otro. Se llama cuando se presiona el botón de Pedir Turno.
-     */
-    public void selectService(View viewServices){
-        Intent goToServices = new Intent(this, AskTicketActivity.class);
-        goToServices.putExtra("company", mCompany);
-        goToServices.putExtra("office", mOffice);
-        startActivity(goToServices);
     }
 
     /**
@@ -115,7 +105,7 @@ public class CompanyDetailsActivity extends AppCompatActivity {
      * pantalla.
      */
     private void fetchData() {
-        mFirestore.collection("companies").document(companyId)
+        mFirestore.collection(Util.COLLECTION_COMPANIES).document(companyId)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -142,26 +132,33 @@ public class CompanyDetailsActivity extends AppCompatActivity {
                         Log.d(TAG, "No such document");
                     }
                 } else {
-                    Log.d( TAG,"get failed with ", task.getException());
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
     }
 
     /**
+     * Paso de un activity a otro. Se llama cuando se presiona el botón de Pedir Turno.
+     */
+    public void selectService(View viewServices) {
+        Intent goToServices = new Intent(this, AskTicketActivity.class);
+        goToServices.putExtra("company", mCompany);
+        goToServices.putExtra("office", mOffice);
+        startActivity(goToServices);
+    }
+
+    /**
      * Función que se encanrga de tomar la data obtenida para colocar
      * la información correspondiente a la sucursal.
      */
-    private void setOfficeDetails()
-    {
+    private void setOfficeDetails() {
         int opensAtHours, opensAtMinutes, closesAtHours, closesAtMinutes;
         List<Office> companyOffices = mCompany.getOffices();
 
         //Obteniendo la sucursal correspondiente al ID conseguido en los extras.
-        for (Office office : companyOffices)
-        {
-            if(office.getId().equals(officeId))
-            {
+        for (Office office : companyOffices) {
+            if (office.getId().equals(officeId)) {
                 mOffice = office;
                 break;
             }
@@ -176,6 +173,15 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         closesAtHours = mOffice.getClosesAt().toDate().getHours();
         closesAtMinutes = mOffice.getClosesAt().toDate().getMinutes();
 
+        if ((mOffice.getOpensAt().toDate().before(new Date()))
+                && (new Date().before(mOffice.getOpensAt().toDate()))) {
+            // opened
+            requestTurn.setEnabled(true);
+        } else {
+            // closed
+            requestTurn.setEnabled(false);
+            requestTurn.setText("Cerrado");
+        }
 
         companyName.setText(mCompany.getName());
         subsidiaryName.setText(mOffice.getName());
@@ -187,17 +193,16 @@ public class CompanyDetailsActivity extends AppCompatActivity {
     /**
      * Función que recibe la hora y los minutos y las coloca en
      * el formato adecuado.
-     * @param hour Hora
+     *
+     * @param hour    Hora
      * @param minutes Minutos
      * @return Cadena con la hora en formato 12 horas.
      */
-    private String formatHour(int hour, int minutes)
-    {
+    private String formatHour(int hour, int minutes) {
 
-        if(hour > 12)
-            return Integer.toString(hour-12) + ":" + formatMinutes(minutes) + "PM";
-        else
-        {
+        if (hour > 12)
+            return Integer.toString(hour - 12) + ":" + formatMinutes(minutes) + "PM";
+        else {
             if (hour == 0)
                 return "12:" + formatMinutes(minutes) + "AM";
             else
@@ -208,12 +213,12 @@ public class CompanyDetailsActivity extends AppCompatActivity {
     /**
      * Función que recibe los minutos y devuelve
      * su formato correcto.
+     *
      * @param minutes Minutos.
      * @return Cadena con minutos en formato.
      */
-    private String formatMinutes(int minutes)
-    {
-        if(minutes == 0)
+    private String formatMinutes(int minutes) {
+        if (minutes == 0)
             return "00";
         else
             return Integer.toString(minutes);

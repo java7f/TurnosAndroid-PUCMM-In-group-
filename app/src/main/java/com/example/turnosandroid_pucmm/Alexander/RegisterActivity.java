@@ -1,8 +1,10 @@
 package com.example.turnosandroid_pucmm.Alexander;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,10 +35,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         // Init views
         firstNameEditText = findViewById(R.id.firstNameEditText);
-        firstNameEditText = findViewById(R.id.firstNameEditText);
-        firstNameEditText = findViewById(R.id.firstNameEditText);
-        firstNameEditText = findViewById(R.id.firstNameEditText);
-        firstNameEditText = findViewById(R.id.firstNameEditText);
+        lastNameEditText = findViewById(R.id.lastNameEditText);
+        emailAddressEditText = findViewById(R.id.emailAddressEditText);
+        passwordEditText = findViewById(R.id.passwordEditText);
+        registerButton = findViewById(R.id.registerButton);
 
         // Click listener
         registerButton.setOnClickListener(this);
@@ -55,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private void register() {
         String firstName = firstNameEditText.getText().toString().trim();
-        String lastName = lastNameEditText.getTransitionName().toString().trim();
+        String lastName = lastNameEditText.getText().toString().trim();
         String email = emailAddressEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
@@ -86,10 +88,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
                                         auth.signOut();
-                                        // intent login///////.
-                                        // int intent = new int
-                                        // startact
+                                        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                        startActivity(intent);
+                                        finish();
                                     } else{
+                                        Log.d("Register", task.getException().toString());
                                         // mostrar mensaje de que no se completo
                                         Toast.makeText(RegisterActivity.this, "no se pudo registrar", Toast.LENGTH_SHORT).show();
 
@@ -97,6 +100,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 }
                             });
                 } else {
+                    Log.d("Register", task.getException().toString());
                     // diplei mesaje k no se crió
                     Toast.makeText(RegisterActivity.this, "no se pudo crear el crear la cuenta", Toast.LENGTH_SHORT).show();
 

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.turnosandroid_pucmm.Jesse.DashboardActivity;
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.Models.Turn;
@@ -29,7 +30,6 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
 
     public static final String SHARED_PREFS = "sharedPrefs";
 
-
     //Company
     private CompanyId mCompany;
 
@@ -45,8 +45,6 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
 
     private static final String TAG = "CompanyDetailsActivity";
 
-    //Flag para identificar si existe una instancia activa de este activity.
-    public static boolean isActive;
 
     //Buttons
     private Button cancelTurn;
@@ -55,24 +53,19 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
     private TextView companyName, subsidiaryName, address, schedule, ticket, time, station;
 
     //Text from SharedPreferences
-    String compName, subName, addr, sched, waitingTime, turnId;
+    private String compName, subName, addr, sched, waitingTime, turnId, stationId;
 
     //Toolbar
-    Toolbar toolbar;
-    Intent intent;
+    private Toolbar toolbar;
 
     //Turno asignado.
-    Turn currentTurn;
+    private Turn currentTurn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isActive = true;
+        DashboardActivity.isTicketActive = true;
 
-        //Finalización de los activities anteriores.
-        CompanyDetailsActivity.cda.finish();
-        AskTicketActivity.ata.finish();
-        PickTypeOfTurnActivity.ptota.finish();
 
         //Enlaces con los layouts
         setContentView(R.layout.activity_show_ticket_info);
@@ -87,7 +80,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         station = findViewById(R.id.stationId);
         setSupportActionBar(toolbar);
 
-        intent = getIntent();
+        Intent intent = getIntent();
         mCompany = new CompanyId();
 
         //Instancia de la base de datos.
@@ -111,6 +104,10 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         }
         else
         {
+            //Finalización de los activities anteriores.
+            CompanyDetailsActivity.cda.finish();
+            AskTicketActivity.ata.finish();
+            PickTypeOfTurnActivity.ptota.finish();
             companyId = mCompany.getId();
             officeId = mOffice.getId();
             fetchData();
@@ -128,12 +125,8 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         else
             deleteTurn();
 
-        ShowTicketInfoActivity.isActive = false;
-        Intent goToCompany = new Intent(this, CompanyDetailsActivity.class);
-        goToCompany.putExtra("companyId", companyId);
-        goToCompany.putExtra("officeId", officeId);
-        startActivity(goToCompany);
-        finish();
+
+        // log Paso 2.
     }
 
     /**
@@ -208,6 +201,18 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener< Void >() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        // Paso 1 log.e()
+                        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.clear();
+                        editor.commit();
+
+                        DashboardActivity.isTicketActive = false;
+                        Intent goToCompany = new Intent(ShowTicketInfoActivity.this, CompanyDetailsActivity.class);
+                        goToCompany.putExtra("companyId", companyId);
+                        goToCompany.putExtra("officeId", officeId);
+                        startActivity(goToCompany);
+                        finish();
                         Toast.makeText(ShowTicketInfoActivity.this, "Deleted Successfully",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -261,6 +266,8 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
                 mOffice = office;
         }
 
+        stationId = currentTurn.getStationId();
+
         int turnsQuantity = mOffice.getTurns().size();
         String waitingTime = Integer.toString(mOffice.getAverageTime() * turnsQuantity);
 
@@ -277,7 +284,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         schedule.setText("Horario: " + formatHour(opensAtHours, opensAtMinutes) + " - " + formatHour(closesAtHours, closesAtMinutes));
         ticket.setText(currentTurn.getTurnId());
         time.setText(waitingTime + " Minutos apróx.");
-        station.setText(currentTurn.getStationId());
+        station.setText(stationId);
     }
 
     private String formatHour(int hour, int minutes)
@@ -311,16 +318,17 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
 
         editor.putString("compName", companyName.getText().toString());
         editor.putString("officeName", subsidiaryName.getText().toString());
-        Log.d("COMP NAME = ", companyName.getText().toString());
-        Log.d("OFFICE NAME = ", subsidiaryName.getText().toString());
         editor.putString("address", address.getText().toString());
         editor.putString("schedule", schedule.getText().toString());
         editor.putString("turnId", currentTurn.getTurnId());
         editor.putString("ticket", ticket.getText().toString());
         editor.putString("companyId", mCompany.getId());
         editor.putString("officeId", mOffice.getId());
+        editor.putString("time", waitingTime);
+        editor.putString("station", stationId);
+        editor.putBoolean("isActive", DashboardActivity.isTicketActive);
 
-        editor.apply();
+        editor.commit();
 
         Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT).show();
     }
@@ -338,6 +346,9 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         waitingTime = sharedPreferences.getString("ticket", "");
         companyId = sharedPreferences.getString("companyId", "");
         officeId = sharedPreferences.getString("officeId", "");
+        waitingTime = sharedPreferences.getString("time", "");
+        stationId = sharedPreferences.getString("station", "");
+        DashboardActivity.isTicketActive = sharedPreferences.getBoolean("isActive", false);
     }
 
     /**
@@ -348,6 +359,9 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         subsidiaryName.setText(subName);
         address.setText(addr);
         schedule.setText(sched);
-        ticket.setText(waitingTime);
+        ticket.setText(turnId);
+        time.setText(waitingTime);
+        station.setText(stationId);
+        time.setText(waitingTime);
     }
 }
