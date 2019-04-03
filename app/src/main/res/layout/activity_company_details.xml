@@ -20,8 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/CompanyInfo"
-            android:paddingBottom="25dp"
-            android:paddingTop="50dp">
+            android:paddingTop="50dp"
+            android:paddingBottom="25dp">
 
             <TextView
                 android:id="@+id/companyName"
@@ -91,16 +91,16 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:text="7"
-                android:textColor="@color/negro"
                 android:textAlignment="center"
-                android:textSize="70sp"/>
+                android:textColor="@color/negro"
+                android:textSize="70sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Minutos Aproximadamente"
                 android:textColor="@color/negro"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
 
 
         </LinearLayout>

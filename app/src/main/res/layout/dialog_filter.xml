@@ -12,7 +12,17 @@
         android:textSize="22sp"
         android:textStyle="bold" />
 
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/dropdown_filter"
+        android:prompt="@string/filter" />
 
+    <Spinner
+        android:id="@+id/spinner2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/resetButton"

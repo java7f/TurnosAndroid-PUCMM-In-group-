@@ -8,6 +8,7 @@ package com.example.turnosandroid_pucmm.Javier;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -20,14 +21,19 @@ import android.widget.Toast;
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Membership;
 import com.example.turnosandroid_pucmm.Models.Office;
-import com.example.turnosandroid_pucmm.Models.Role;
 import com.example.turnosandroid_pucmm.Models.Station;
 import com.example.turnosandroid_pucmm.Models.Turn;
 import com.example.turnosandroid_pucmm.Models.UserId;
 import com.example.turnosandroid_pucmm.R;
+import com.example.turnosandroid_pucmm.Robert.Util;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -40,6 +46,9 @@ import java.util.Random;
 public class PickTypeOfTurnActivity extends AppCompatActivity {
 
     private static final String PREFERENTIAL_TURN = "Turno Preferencial";
+
+    //TAG para el log.
+    private static final String TAG = "PickTypeOfTurnActivity";
 
     public static Activity ptota;
     /**
@@ -76,6 +85,9 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
     //Firebase instance
     private FirebaseFirestore mFirestore;
 
+    //Autenticación.
+    private FirebaseAuth mAuth;
+
     /**
      * Nombre del servicio seleccionado.
      */
@@ -103,6 +115,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         queues = new ArrayList<>();
         stations = new ArrayList<>();
         mFirestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         Intent intent = getIntent();
 
@@ -115,7 +128,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         worksWithPreferentials = mOffice.getHasStationsForPreferential();
 
         //TODO: ¿Qué clase de turnos están disponibles en esta sucursal?
-        getTurnOptions(worksWithMemberships,worksWithPreferentials);
+        getTurnOptions(worksWithMemberships, worksWithPreferentials);
 
         //Init adapter
         adapter = new ArrayAdapter<String>(this, R.layout.list_label, queues);
@@ -132,7 +145,6 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 typeOfTurn = turnType.getItemAtPosition(i).toString();
                 registerTurn();
-                goToTicketInfo();
             }
         });
 
@@ -142,7 +154,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
     /**
      * Traslado al activity de mostrar información del ticket.
      */
-    public void goToTicketInfo(){
+    public void goToTicketInfo() {
 
         Intent goToCompany = new Intent(this, ShowTicketInfoActivity.class);
         goToCompany.putExtra("company", mCompany);
@@ -154,49 +166,81 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
 
     /**
      * Llena la lista con los tipos de turnos.
-     * @param worksWithMemberships ¿La sucursal trabaja con membresías?
+     *
+     * @param worksWithMemberships   ¿La sucursal trabaja con membresías?
      * @param worksWithPreferentials ¿La sucursal trabaja con clientes preferenciales?
      */
-    private void getTurnOptions(boolean worksWithMemberships, boolean worksWithPreferentials)
-    {
+    private void getTurnOptions(boolean worksWithMemberships, boolean worksWithPreferentials) {
 
         List<Membership> memberships = mCompany.getMemberships();
 
         queues.add("Turno General");
 
-        if(worksWithPreferentials)
+        if (worksWithPreferentials)
             queues.add(PREFERENTIAL_TURN);
 
-        if(worksWithMemberships)
-        {
-            for(Membership membership : memberships)
+        if (worksWithMemberships) {
+            for (Membership membership : memberships)
                 queues.add("Membresía " + membership.getName());
         }
     }
 
+    /**
+     * Acción de registrar un turno en la base de datos.
+     */
+    private void registerTurn() {
+        final FirebaseUser user = mAuth.getCurrentUser();
+
+        if (user != null) {
+            mFirestore.collection(Util.COLLECTION_USERS).document(user.getUid())
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+
+                            // Convierte la data y la lleva al modelo de UserId
+                            UserId userId = document.toObject(UserId.class);
+                            userId.setId(document.getId());
+
+                            Log.d("USER ID: ", user.getUid());
+                            Log.d(TAG, userId.getFirstName());
+                            Log.d(TAG, userId.getId());
+                            getUserAndRegisterTurn(userId);
+
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+        }
+        else
+        {
+            getUserAndRegisterTurn(new UserId());
+        }
+    }
 
     /**
      * Acción de registrar un turno en la base de datos.
      */
-    private void registerTurn()
-    {
+    private void getUserAndRegisterTurn(UserId currentUser) {
         //Id random para el ticket. TODO: Restringir el rango.
         Random random = new Random();
         int idTurn = random.nextInt(101);
 
         //Tiempo de creación.
         Timestamp createdAt = Timestamp.now();
+
         //Lista de sucursales.
         List<Office> offices = mCompany.getOffices();
-        //Id random para el usuario mientras la lógica sigue siendo desarrollada.
-        String userId = "US01";
-
-        //Creación del usuario.
-        UserId user = new UserId(userId, "Juanito", "Perez", "hola@hotmail.com", new Role());
 
 
         //Creación del turno. //TODO: Realizar lógica de asignar a la estación correcta.
-        newTurn = new Turn(Integer.toString(idTurn),createdAt, user ,serviceSelected, getStationForTurn(), false, false,"");
+        newTurn = new Turn(Integer.toString(idTurn), createdAt, currentUser, serviceSelected, getStationForTurn(), false, false, "");
 
         //Añade el nuevo turno a la cola localmente.
         mOffice.getTurns().add(newTurn);
@@ -205,10 +249,8 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
         /**
          * Se busca la sucursal y se reemplaza por ella misma con el nuevo turno.
          */
-        for(int i=0; i<offices.size(); i++)
-        {
-            if(offices.get(i).getId().equals(mOffice.getId()))
-            {
+        for (int i = 0; i < offices.size(); i++) {
+            if (offices.get(i).getId().equals(mOffice.getId())) {
                 mCompany.getOffices().set(i, mOffice);
                 break;
             }
@@ -220,13 +262,15 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
          */
         DocumentReference document = mFirestore.collection("companies").document(mCompany.getId());
         document.update("offices", offices)
-                .addOnSuccessListener(new OnSuccessListener< Void >() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(PickTypeOfTurnActivity.this, "Updated Successfully",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+
+        goToTicketInfo();
     }
 
     //TODO: Hacer la lógica de asignar una estación al turno.
@@ -236,15 +280,13 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
 
         Log.d("STATIONS NUMBER: ", Boolean.toString(isForPreferential(typeOfTurn)));
 
-        for (Station station : mOffice.getStations())
-        {
-            if(station.getTypeOfService().equals(serviceSelected))
-            {
-                if(isForPreferential(typeOfTurn) && station.getIsForPreferentialAttention())
+        for (Station station : mOffice.getStations()) {
+            if (station.getTypeOfService().equals(serviceSelected)) {
+                if (isForPreferential(typeOfTurn) && station.getIsForPreferentialAttention())
                     stations.add(station.getId());
-                else if(isForMemberships(typeOfTurn) && station.getIsForMemberships())
+                else if (isForMemberships(typeOfTurn) && station.getIsForMemberships())
                     stations.add(station.getId());
-                else if(!isForMemberships(typeOfTurn) && !isForPreferential(typeOfTurn))
+                else if (!isForMemberships(typeOfTurn) && !isForPreferential(typeOfTurn))
                     stations.add(station.getId());
             }
         }
@@ -257,22 +299,20 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
     /**
      * Función que obtiene si el tipo de turno seleccionado es preferencial.
      */
-    private boolean isForPreferential(String type)
-    {
+    private boolean isForPreferential(String type) {
         return PREFERENTIAL_TURN.equals(type);
     }
 
     /**
      * Función que obtiene si el tipo de turno seleccionado es una membresía.
      */
-    private boolean isForMemberships(String type)
-    {
-        List<Membership> memberships =  mCompany.getMemberships();
+    private boolean isForMemberships(String type) {
+        List<Membership> memberships = mCompany.getMemberships();
         String membershipName;
 
-        for(Membership membership : memberships){
+        for (Membership membership : memberships) {
             membershipName = "Membresía " + membership.getName();
-            if(type.equals(membershipName))
+            if (type.equals(membershipName))
                 return true;
         }
 

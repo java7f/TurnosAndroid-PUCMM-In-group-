@@ -173,8 +173,9 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         closesAtHours = mOffice.getClosesAt().toDate().getHours();
         closesAtMinutes = mOffice.getClosesAt().toDate().getMinutes();
 
-        if ((mOffice.getOpensAt().toDate().before(new Date()))
-                && (new Date().before(mOffice.getOpensAt().toDate()))) {
+        Date currentTime = new Date();
+
+        if (currentTime.getHours() > opensAtHours && currentTime.getHours() < closesAtHours) {
             // opened
             requestTurn.setEnabled(true);
         } else {

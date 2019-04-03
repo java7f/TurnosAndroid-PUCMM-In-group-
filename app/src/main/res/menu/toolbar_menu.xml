@@ -29,5 +29,4 @@
         android:title="Log in"
         app:showAsAction="never"/>
 
-
 </menu>

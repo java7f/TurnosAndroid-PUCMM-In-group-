@@ -102,13 +102,13 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 // Si el sign in funciona dar un mensaje(toast) que funciono
 
-
                                 if (!task.isSuccessful()) {
                                     // Si hubo algun error
 
-                                    // Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginActivity.this, "Login failed.", Toast.LENGTH_LONG).show();
                                 } else {
                                     //si no hubo error ir al dashboard
+                                    Toast.makeText(LoginActivity.this, "Sesión iniciada.", Toast.LENGTH_LONG).show();
                                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                                     startActivity(intent);
                                     finish();

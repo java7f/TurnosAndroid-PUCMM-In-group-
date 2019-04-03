@@ -6,13 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="50px"
+    android:background="@color/blanco"
     tools:context=".Alexander.LoginActivity">
 
     <ImageView
         android:layout_width="wrap_content"
-        android:src="@drawable/logo"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_height="wrap_content" />
+        android:paddingTop="60dp"
+        android:paddingBottom="100dp"
+        android:src="@drawable/logo" />
 
     <EditText
         android:id="@+id/email"
@@ -35,14 +38,20 @@
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login" />
+        android:layout_marginTop="50dp"
+        android:backgroundTint="#2150de"
+        android:text="Login"
+        android:textColor="#ffffff" />
 
     <!-- Link to Login Screen -->
     <Button
         android:id="@+id/btn_signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="REGISTER" />
+        android:backgroundTint="#ffffff"
+        android:elevation="10dp"
+        android:text="REGISTER"
+        android:textColor="#2150de" />
 
     <Button
         android:id="@+id/btn_reset_password"
@@ -54,6 +63,7 @@
         android:id="@+id/btn_guest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#ffb749"
         android:text="Entrar Como Guest" />
 
 </LinearLayout>

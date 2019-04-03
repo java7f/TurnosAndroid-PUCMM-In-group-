@@ -398,7 +398,7 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
         final AlertDialog dialog;
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_search, null);
+        View dialogView = inflater.inflate(R.layout.dialog_filter, null);
         dialogBuilder.setView(dialogView);
 
         final Spinner serviceSpinner = dialogView.findViewById(R.id.companyNameEditText);

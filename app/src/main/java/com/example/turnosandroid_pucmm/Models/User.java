@@ -44,6 +44,11 @@ public class User implements Parcelable {
     private Role roles;
 
     /**
+     * Si es administrador y tiene sucursal asignada.
+     */
+    private String officeAssignedId;
+
+    /**
      * Contructor
      */
     public User() {
@@ -124,11 +129,20 @@ public class User implements Parcelable {
         this.roles = roles;
     }
 
+    public String getOfficeAssignedId() {
+        return officeAssignedId;
+    }
+
+    public void setOfficeAssignedId(String officeAssignedId) {
+        this.officeAssignedId = officeAssignedId;
+    }
+
     public User(Parcel in){
         this.firstName = in.readString();
         this.lastName = in.readString();
         this.emailAddress = in.readString();
         this.roles = in.readParcelable(Role.class.getClassLoader());
+        this.officeAssignedId = in.readString();
     }
 
     @Override
@@ -142,5 +156,6 @@ public class User implements Parcelable {
         dest.writeString(lastName);
         dest.writeString(emailAddress);
         dest.writeParcelable(roles, flags);
+        dest.writeString(officeAssignedId);
     }
 }
