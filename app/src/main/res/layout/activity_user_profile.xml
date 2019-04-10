@@ -34,8 +34,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:padding="20dp"
-                android:text="Juan Luis Mejia" />
+                android:padding="20dp" />
         </TableRow>
 
         <TableRow
@@ -56,8 +55,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textEmailAddress"
-                android:padding="20dp"
-                android:text="juanluismejia@gmail.com" />
+                android:padding="20dp" />
         </TableRow>
 
         <TableRow
@@ -78,8 +76,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:padding="20dp"
-                android:text="Administrador" />
+                android:padding="20dp" />
         </TableRow>
 
     </TableLayout>

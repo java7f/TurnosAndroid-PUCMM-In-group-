@@ -7,6 +7,8 @@ package com.example.turnosandroid_pucmm.Javier;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -175,13 +177,25 @@ public class CompanyDetailsActivity extends AppCompatActivity {
 
         Date currentTime = new Date();
 
-        if (currentTime.getHours() > opensAtHours && currentTime.getHours() < closesAtHours) {
+        // Llevar todo a minutos y sumarlo para poder comparar si está cerrado o no.
+        int compareOpenHours = (opensAtHours*60) + opensAtMinutes;
+        int compareCloseHours = (closesAtHours *60) + closesAtMinutes;
+        int currentHour = (currentTime.getHours()*60) + currentTime.getMinutes();
+
+        boolean isOpen = false;
+
+        if(currentHour >= compareOpenHours && currentHour < compareCloseHours)
+            isOpen = true;
+
+        if ( isOpen ) {
             // opened
             requestTurn.setEnabled(true);
         } else {
             // closed
             requestTurn.setEnabled(false);
             requestTurn.setText("Cerrado");
+            requestTurn.setTextColor(Color.parseColor("#b00020"));
+            requestTurn.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
         }
 
         companyName.setText(mCompany.getName());

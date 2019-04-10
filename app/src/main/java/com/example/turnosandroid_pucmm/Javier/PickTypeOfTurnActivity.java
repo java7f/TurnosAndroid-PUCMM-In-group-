@@ -229,8 +229,14 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
      */
     private void getUserAndRegisterTurn(UserId currentUser) {
         //Id random para el ticket. TODO: Restringir el rango.
-        Random random = new Random();
-        int idTurn = random.nextInt(101);
+
+        int idTurn = 1;
+
+        //Si la cola no está vacía, agarra el último turno, toma su ID y súmale 1;
+        if(mOffice.getTurns().size() != 0){
+            String lastTurnId = mOffice.getTurns().get(mOffice.getTurns().size()-1).getId();
+            idTurn = Integer.parseInt(lastTurnId) + 1;
+        }
 
         //Tiempo de creación.
         Timestamp createdAt = Timestamp.now();
@@ -265,7 +271,7 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(PickTypeOfTurnActivity.this, "Updated Successfully",
+                        Toast.makeText(PickTypeOfTurnActivity.this, "El turno fue registrado correctamente",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

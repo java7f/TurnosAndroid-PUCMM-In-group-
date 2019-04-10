@@ -19,15 +19,6 @@
         android:entries="@array/dropdown_filter"
         android:prompt="@string/filter" />
 
-    <Spinner
-        android:id="@+id/spinner2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/resetButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Resetear" />
 
 </LinearLayout>

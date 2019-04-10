@@ -28,7 +28,7 @@ public class Turn implements Parcelable {
     /**
      * Indentificador único del turno.
      */
-    private String turnId;
+    private String id;
 
     /**
      * Tiempo de creación del turno.
@@ -69,7 +69,7 @@ public class Turn implements Parcelable {
      * Constructor
      */
     public Turn() {
-        turnId = "";
+        id = "";
         createdAt = new Timestamp(0,0);
         typeOfService = "";
         isForPreferentialAttention = false;
@@ -79,10 +79,10 @@ public class Turn implements Parcelable {
 
     }
 
-    public Turn(String turnId, Timestamp createdAt, UserId user,
+    public Turn(String id, Timestamp createdAt, UserId user,
                 String typeOfService, String stationId, boolean isForPreferentialAttention,
                 boolean isForMemberships, String membership) {
-        this.turnId = turnId;
+        this.id = id;
         this.createdAt = createdAt;
         this.typeOfService = typeOfService;
         this.stationId = stationId;
@@ -97,16 +97,16 @@ public class Turn implements Parcelable {
      * Devuelve el ID del turno.
      * @return String con ID.
      */
-    public String getTurnId() {
-        return turnId;
+    public String getId() {
+        return id;
     }
 
     /**
      * Fija el valor del ID del turno.
-     * @param turnId ID.
+     * @param id ID.
      */
-    public void setTurnId(String turnId) {
-        this.turnId = turnId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**
@@ -199,7 +199,7 @@ public class Turn implements Parcelable {
     }
 
     public Turn(Parcel in){
-        this.turnId = in.readString();
+        this.id = in.readString();
         this.createdAt = in.readParcelable(Timestamp.class.getClassLoader());
         this.typeOfService = in.readString();
         this.stationId = in.readString();
@@ -216,7 +216,7 @@ public class Turn implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(turnId);
+        dest.writeString(id);
         dest.writeParcelable(createdAt, flags);
         dest.writeString(typeOfService);
         dest.writeString(stationId);

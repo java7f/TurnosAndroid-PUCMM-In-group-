@@ -74,12 +74,8 @@ public class AdapterDatos
     public void onBindViewHolder(@NonNull ViewHolderDatos holder, int position) {
 
         /**
-         * Proceso que maneja el índice de la compañía a la cual se están desplegando sus sucursales.
-         * La idea del procedimiento consiste en poder determinar a cuál compañía pertenece
-         * la sucursal que está siendo desplegada en pantalla, obetenida del atributo listOffices.
+         * Asignación de la data en cada carta.
          */
-
-
         holder.asignarDatos(position);
     }
 
@@ -154,11 +150,12 @@ public class AdapterDatos
             //Sucursal a mostrar
             Office currentOffice = listOffices.get(position);
 
-            String currentCompanyName = officeCompanyLinker.get(currentOffice.getId());
+            String currentCompanyName = "";
+            String currentCompanyId = officeCompanyLinker.get(currentOffice.getId());
 
             for(CompanyId companyId : companies)
             {
-                if(companyId.getId().equals(currentCompanyName))
+                if(companyId.getId().equals(currentCompanyId))
                 {
                     currentCompanyName = companyId.getName();
                     break;
@@ -216,6 +213,8 @@ public class AdapterDatos
     private String formatMinutes(int minutes) {
         if (minutes == 0)
             return "00";
+        else if(minutes < 10)
+            return "0" + Integer.toString(minutes);
         else
             return Integer.toString(minutes);
     }

@@ -167,7 +167,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
      */
     public void deleteTurn() {
         if(currentTurn != null)
-            turnId = currentTurn.getTurnId();
+            turnId = currentTurn.getId();
         else
         {
             SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
@@ -180,7 +180,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
 
         for(int i=0; i<turnSize; i++)
         {
-            if(turns.get(i).getTurnId().equals(turnId))
+            if(turns.get(i).getId().equals(turnId))
             {
                 turns.remove(i);
                 break;
@@ -213,7 +213,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
                         goToCompany.putExtra("officeId", officeId);
                         startActivity(goToCompany);
                         finish();
-                        Toast.makeText(ShowTicketInfoActivity.this, "Deleted Successfully",
+                        Toast.makeText(ShowTicketInfoActivity.this, "Turno cancelado",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -268,8 +268,8 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
 
         stationId = currentTurn.getStationId();
 
-        int turnsQuantity = mOffice.getTurns().size();
-        String waitingTime = Integer.toString(mOffice.getAverageTime() * turnsQuantity);
+
+        String waitingTime = Integer.toString(getWaitingTime());
 
         opensAtHours = mOffice.getOpensAt().toDate().getHours();
         opensAtMinutes = mOffice.getOpensAt().toDate().getMinutes();
@@ -282,7 +282,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         subsidiaryName.setText(mOffice.getName());
         address.setText(mOffice.getAddress());
         schedule.setText("Horario: " + formatHour(opensAtHours, opensAtMinutes) + " - " + formatHour(closesAtHours, closesAtMinutes));
-        ticket.setText(currentTurn.getTurnId());
+        ticket.setText(currentTurn.getId());
         time.setText(waitingTime + " Minutos apróx.");
         station.setText(stationId);
     }
@@ -312,7 +312,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
     /**
      * SharedPreferences save data.
      */
-    public void saveData() {
+    private void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -320,30 +320,27 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         editor.putString("officeName", subsidiaryName.getText().toString());
         editor.putString("address", address.getText().toString());
         editor.putString("schedule", schedule.getText().toString());
-        editor.putString("turnId", currentTurn.getTurnId());
+        editor.putString("turnId", currentTurn.getId());
         editor.putString("ticket", ticket.getText().toString());
         editor.putString("companyId", mCompany.getId());
         editor.putString("officeId", mOffice.getId());
-        editor.putString("time", waitingTime);
+        editor.putString("time", time.getText().toString());
         editor.putString("station", stationId);
         editor.putBoolean("isActive", DashboardActivity.isTicketActive);
 
         editor.commit();
-
-        Toast.makeText(this, "Data saved", Toast.LENGTH_SHORT).show();
     }
 
     /**
      * SharedPreferences load data.
      */
-    public void loadData() {
+    private void loadData() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         compName = sharedPreferences.getString("compName", "");
         subName = sharedPreferences.getString("officeName", "");
         addr = sharedPreferences.getString("address", "");
         sched = sharedPreferences.getString("schedule", "");
         turnId = sharedPreferences.getString("turnId", "");
-        waitingTime = sharedPreferences.getString("ticket", "");
         companyId = sharedPreferences.getString("companyId", "");
         officeId = sharedPreferences.getString("officeId", "");
         waitingTime = sharedPreferences.getString("time", "");
@@ -354,7 +351,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
     /**
      * SharedPreferences update de la data.
      */
-    public void updateViews() {
+    private void updateViews() {
         companyName.setText(compName);
         subsidiaryName.setText(subName);
         address.setText(addr);
@@ -364,4 +361,47 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         station.setText(stationId);
         time.setText(waitingTime);
     }
+
+    /**
+     * Función que calcula el tiempo de espera
+     * según el tipo de turno solicitado.
+     */
+    private int getWaitingTime(){
+
+        int turnsQuantity = mOffice.getTurns().size();
+
+        if(currentTurn.isForMemberships())
+            return searchTurns(true) * mOffice.getAverageTime();
+        else if(currentTurn.isForPreferentialAttention())
+            return searchTurns(false) * mOffice.getAverageTime();
+        else
+            return mOffice.getAverageTime() * turnsQuantity;
+    }
+
+    /**
+     * Función que busca en la lista de turnos
+     * la cantidad de turnos en cola
+     * según el tipo de turno solicitado.
+     * @param typeOfTurn true si es de membresía, false si es de preferenciales.
+     * @return Entero con cantidad de turnos encontrados.
+     */
+    private int searchTurns(boolean typeOfTurn) {
+        List<Turn> turns = mOffice.getTurns();
+        int acum = 0;
+
+        for(Turn turn : turns){
+
+            if(typeOfTurn){
+                if (currentTurn.isForMemberships() && currentTurn.getStationId().equals(turn.getStationId()))
+                    acum++;
+            }
+            else {
+                if (currentTurn.isForPreferentialAttention() && currentTurn.getStationId().equals(turn.getStationId()))
+                    acum++;
+            }
+        }
+
+        return acum;
+    }
+
 }

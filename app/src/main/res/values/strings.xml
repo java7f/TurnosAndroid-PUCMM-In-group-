@@ -5,6 +5,7 @@
     <string name="filter">Seleccione un servicio</string>
 
     <string-array name="dropdown_filter">
+        <item>Elija un servicio...</item>
         <item>Agencias de viaje</item>
         <item>Banca</item>
         <item>Casinos</item>

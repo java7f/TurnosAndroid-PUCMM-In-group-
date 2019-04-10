@@ -4,6 +4,7 @@ package com.example.turnosandroid_pucmm.Jesse;
  * @brief Fuente del Dashboard Activity.
  */
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,14 +17,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-
+import android.view.*;
+import android.widget.*;
 import com.example.turnosandroid_pucmm.Alexander.LoginActivity;
 import com.example.turnosandroid_pucmm.Javier.CompanyDetailsActivity;
 import com.example.turnosandroid_pucmm.Javier.ShowTicketInfoActivity;
@@ -85,6 +80,7 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +93,7 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
 
         //Muestra el ActionBar
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         //Inicialización del layout manager
         recycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -121,6 +118,7 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
         } else {
             fetchLoggedInData();
         }
+
     }
 
     @Override
@@ -153,7 +151,7 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
                 startActivity(intent);
                 return true;
             case R.id.idFilter:
-                //filter();
+                filter();
                 return true;
             case R.id.idAbout:
                 Intent intent2 = new Intent(this, AboutActivity.class);
@@ -393,7 +391,8 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
         });
     }
 
-    /*private void filter() {
+
+    private void  filter() {
         // OUTTER
         final AlertDialog dialog;
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -401,57 +400,53 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
         View dialogView = inflater.inflate(R.layout.dialog_filter, null);
         dialogBuilder.setView(dialogView);
 
-        final Spinner serviceSpinner = dialogView.findViewById(R.id.companyNameEditText);
-        Button resetButton = dialogView.findViewById(R.id.resetButton);
+        final Spinner serviceSpinner = dialogView.findViewById(R.id.spinner1);
+        //Button resetButton = dialogView.findViewById(R.id.resetButton);
+
 
         // inyectar el arreglo de servicios al dropdown
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this, R.array.dropdown_filter, android.R.layout.simple_spinner_item);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        serviceSpinner.setAdapter(spinnerAdapter);
+
+        dialogBuilder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (!serviceSpinner.getSelectedItem().toString().equals("Elija un servicio...")) {
+                    // INNER
+                    dialogInterface.dismiss();
+
+                    List<CompanyId> temp = new ArrayList<>();
+                    Log.d("mCompaniesTemp", String.valueOf(mCompaniesTemp.size()));
+
+                    // TODO: Hacer un like
+                    for (CompanyId company : mCompaniesTemp) {
+                        if (company.getTypeOfService().toLowerCase().equals(serviceSpinner.getSelectedItem().toString().toLowerCase())) {
+                            temp.add(company);
+                        }
+                    }
+
+                    // altice, banco caribe, banco popular, burger king
+
+                    Log.d("temp", String.valueOf(temp.size()));
+                    Log.d("mCompaniesTemp", String.valueOf(mCompaniesTemp.size()));
+
+                    // mCompanies.clear();
+                    mCompanies = temp;
+                    adapter = new AdapterDatos(mCompanies, officeCompanyLinker);
+                    recycler.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+
+                    if(temp.size() == 0)
+                    {
+                        Toast.makeText(DashboardActivity.this, "No se encontró ningun resultado.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
 
         dialog = dialogBuilder.create();
         dialog.show();
 
-        // DROPDOWN
-        // String servicers[ ] =Transporte, Transporte2, Transporte3, Transporte4;
-
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // INNER
-                dialog.dismiss();
-
-                List<CompanyId> temp = new ArrayList<>();
-                Log.d("mCompaniesTemp", String.valueOf(mCompaniesTemp.size()));
-
-                // TODO: Hacer un like
-                for (CompanyId company : mCompaniesTemp) {
-                    if (company.getName().toLowerCase().equals(nameEditText.getText().toString().toLowerCase())) {
-                        temp.add(company);
-                    }
-                }
-
-                // altice, banco caribe, banco popular, burger king
-
-                Log.d("temp", String.valueOf(temp.size()));
-                Log.d("mCompaniesTemp", String.valueOf(mCompaniesTemp.size()));
-
-                // mCompanies.clear();
-                mCompanies = temp;
-                adapter = new AdapterDatos(mCompanies, officeCompanyLinker);
-                recycler.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // INNER
-                dialog.dismiss();
-
-                mCompanies = mCompaniesTemp;
-                adapter = new AdapterDatos(mCompanies, officeCompanyLinker);
-                recycler.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
-            }
-        });
-    }*/
+    }
 }

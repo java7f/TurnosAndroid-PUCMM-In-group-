@@ -6,4 +6,12 @@
     android:background="#000000"
     android:backgroundTint="@color/blanco"
     android:elevation="4dp"
-    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    app:titleTextColor="@color/negro"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    
+    <ImageView
+        android:layout_width="110dp"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:src="@drawable/logo"/>
+</android.support.v7.widget.Toolbar>

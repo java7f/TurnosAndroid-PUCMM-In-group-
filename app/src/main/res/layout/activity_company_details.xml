@@ -30,7 +30,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="20dp"
-                android:text="Nombre de la empresa"
                 android:textAlignment="center"
                 android:textColor="#ffff"
                 android:textSize="28sp"
@@ -43,7 +42,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="70dp"
-                android:text="Nombre de la sucursal"
                 android:textAlignment="center"
                 android:textColor="#ffff"
                 android:textSize="24sp" />
@@ -55,7 +53,6 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="120dp"
-                android:text="Dirección de la sucursal"
                 android:textAlignment="center"
                 android:textColor="#ffff"
                 android:textSize="14sp" />
@@ -66,8 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="150dp"
-                android:text="Horario de trabajo"
+                android:layout_marginTop="170dp"
                 android:textAlignment="center"
                 android:textColor="#ffff"
                 android:textSize="14sp" />
@@ -79,7 +75,7 @@
             android:layout_height="200dp"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
-            android:layout_marginTop="270dp"
+            android:layout_marginTop="290dp"
             android:background="@drawable/circle_text"
             android:gravity="center"
             android:orientation="vertical">
@@ -90,7 +86,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerInParent="true"
-                android:text="7"
                 android:textAlignment="center"
                 android:textColor="@color/negro"
                 android:textSize="70sp" />
@@ -107,7 +102,7 @@
 
         <Button
             android:id="@+id/requestTurn"
-            android:layout_width="350dp"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
