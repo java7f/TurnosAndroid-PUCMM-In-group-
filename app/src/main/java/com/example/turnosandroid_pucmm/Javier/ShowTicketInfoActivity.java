@@ -43,6 +43,8 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
 
     //Firebase instance
     private FirebaseFirestore mFirestore;
+    private ListenerRegistration mRegistration;
+    private ListenerRegistration mRegistration2;
 
     private static final String TAG = "ShowTicketInfoActivity";
 
@@ -135,7 +137,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
     }
 
     private void addListener() {
-        mFirestore.collection(Util.COLLECTION_COMPANIES)
+        mRegistration = mFirestore.collection(Util.COLLECTION_COMPANIES)
                 .document(companyId)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
@@ -186,6 +188,39 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        addListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mRegistration != null) {
+            mRegistration.remove();
+        }
+
+        if (mRegistration2 != null) {
+            mRegistration2.remove();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mRegistration != null) {
+            mRegistration.remove();
+        }
+
+        if (mRegistration2 != null) {
+            mRegistration2.remove();
+        }
     }
 
     /**
@@ -328,7 +363,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
      */
     private void fetchDataListener() {
 
-        mFirestore.collection(Util.COLLECTION_COMPANIES)
+        mRegistration2 = mFirestore.collection(Util.COLLECTION_COMPANIES)
                 .document(companyId)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
