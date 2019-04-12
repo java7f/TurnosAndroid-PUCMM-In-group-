@@ -320,6 +320,9 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
         }, 1000);
     }
 
+    /**
+     * Actualiza la data al hacer refresh.
+     */
     private void loadRefreshData() {
         mCompanies.clear();
         adapter.notifyDataSetChanged();
@@ -333,6 +336,9 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    /**
+     * Función que busca una compañía.
+     */
     private void search() {
         // OUTTER
         final AlertDialog dialog;
@@ -359,7 +365,7 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
 
                 // TODO: Hacer un like
                 for (CompanyId company : mCompaniesTemp) {
-                    if (company.getName().toLowerCase().equals(nameEditText.getText().toString().toLowerCase())) {
+                    if (company.getName().toLowerCase().contains(nameEditText.getText().toString().toLowerCase())) {
                         temp.add(company);
                     }
                 }
@@ -391,7 +397,9 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
         });
     }
 
-
+    /**
+     * Función que filtra las compañías según su servicio.
+     */
     private void  filter() {
         // OUTTER
         final AlertDialog dialog;

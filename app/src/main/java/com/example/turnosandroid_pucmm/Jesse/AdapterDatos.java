@@ -12,10 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.example.turnosandroid_pucmm.Models.Company;
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
+import com.example.turnosandroid_pucmm.Models.Turn;
 import com.example.turnosandroid_pucmm.R;
 
 import java.util.ArrayList;
@@ -165,7 +165,7 @@ public class AdapterDatos
             //Cantidad de turnos en cola.
             int turnsQuantity = currentOffice.getTurns().size();
             //Cálculo del tiempo apróximado de espera.
-            String waitingTime = Integer.toString(currentOffice.getAverageTime() * turnsQuantity);
+            String waitingTime = Integer.toString(searchTurns(currentOffice));
 
             idNombre.setText(currentCompanyName);
             idSucursal.setText(currentOffice.getName());
@@ -217,6 +217,26 @@ public class AdapterDatos
             return "0" + Integer.toString(minutes);
         else
             return Integer.toString(minutes);
+    }
+
+
+    /**
+     * Función que busca en la lista de turnos
+     * la cantidad de turnos en cola
+     * según el tipo de turno solicitado.
+     * @return Entero con cantidad de turnos encontrados.
+     */
+    private int searchTurns(Office mOffice) {
+        List<Turn> turns = mOffice.getTurns();
+        int acum = 0;
+
+        for(Turn turn : turns){
+
+            if(!turn.isForMemberships() && !turn.isForPreferentialAttention())
+                acum += mOffice.getAverageTime();
+        }
+
+        return acum;
     }
 }
 

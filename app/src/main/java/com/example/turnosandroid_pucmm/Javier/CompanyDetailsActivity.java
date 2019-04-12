@@ -17,7 +17,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.R;
@@ -187,7 +186,8 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         if(currentHour >= compareOpenHours && currentHour < compareCloseHours)
             isOpen = true;
 
-        if ( isOpen ) {
+
+        if (isOpen) {
             // opened
             requestTurn.setEnabled(true);
         } else {
@@ -238,5 +238,6 @@ public class CompanyDetailsActivity extends AppCompatActivity {
         else
             return Integer.toString(minutes);
     }
+
 
 }

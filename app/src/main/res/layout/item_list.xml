@@ -52,7 +52,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="-15dp"
                             android:layout_marginBottom="5dp"
-                            android:text="Turnos"
+                            android:text="Turnos Gen."
                             android:textAlignment="center"
                             android:textColor="@color/negro" />
                     </LinearLayout>

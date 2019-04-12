@@ -1,70 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="50px"
-    android:background="@color/blanco"
-    tools:context=".Alexander.LoginActivity">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".Alexander.LoginActivity">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="60dp"
-        android:paddingBottom="100dp"
-        android:src="@drawable/logo" />
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="50dp"
+            android:background="@color/blanco">
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="60dp"
+                android:paddingBottom="100dp"
+                android:src="@drawable/logo"/>
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:hint="Email"
-        android:inputType="textEmailAddress" />
+        <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Email"
+                android:inputType="textEmailAddress"/>
 
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Contraseña"
-        android:inputType="textPassword" />
+        <EditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Contraseña"
+                android:inputType="textPassword"/>
 
-    <!-- Login Button -->
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:backgroundTint="#2150de"
-        android:text="Login"
-        android:textColor="#ffffff" />
+        <!-- Login Button -->
+        <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:backgroundTint="#2150de"
+                android:text="Login"
+                android:textColor="#ffffff"/>
 
-    <!-- Link to Login Screen -->
-    <Button
-        android:id="@+id/btn_signup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#ffffff"
-        android:elevation="10dp"
-        android:text="REGISTER"
-        android:textColor="#2150de" />
+        <!-- Link to Login Screen -->
+        <Button
+                android:id="@+id/btn_signup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#ffffff"
+                android:elevation="10dp"
+                android:text="REGISTER"
+                android:textColor="#2150de"/>
 
-    <Button
-        android:id="@+id/btn_reset_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Reset password" />
+        <Button
+                android:id="@+id/btn_reset_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Reset password"/>
 
-    <Button
-        android:id="@+id/btn_guest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#ffb749"
-        android:text="Entrar Como Guest" />
+        <Button
+                android:id="@+id/btn_guest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#ffb749"
+                android:text="Entrar Como Guest"/>
 
-</LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
 
