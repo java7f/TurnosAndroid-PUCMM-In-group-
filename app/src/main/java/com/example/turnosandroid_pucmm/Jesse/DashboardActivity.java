@@ -24,16 +24,16 @@ import com.example.turnosandroid_pucmm.Javier.CompanyDetailsActivity;
 import com.example.turnosandroid_pucmm.Javier.ShowTicketInfoActivity;
 import com.example.turnosandroid_pucmm.JuanLuis.AboutActivity;
 import com.example.turnosandroid_pucmm.JuanLuis.UserProfileActivity;
+import com.example.turnosandroid_pucmm.Models.Company;
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
+import com.example.turnosandroid_pucmm.Models.Turn;
 import com.example.turnosandroid_pucmm.R;
 import com.example.turnosandroid_pucmm.Robert.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,7 +61,7 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
     private HashMap<String, String> officeCompanyLinker;
 
     //Tag para el Log.
-    private static final String TAG = "Dashboard Activity";
+    private static final String TAG = "DashboardActivity";
 
     //Recycler View utilizado.
     private RecyclerView recycler;
@@ -106,10 +106,16 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
         mCompanies = new ArrayList<>();
         officeCompanyLinker = new HashMap<>();
 
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        /**
+         * Cambio #1
+         * @Robert Gomez
+         */
+        checkIfTurnStillExits();
+
+        /*SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
         if (sharedPreferences != null)
-            isTicketActive = sharedPreferences.getBoolean("isActive", false);
+            isTicketActive = sharedPreferences.getBoolean("isActive", false)*/
 
         //Obtención de la data para mostrar.
 
@@ -119,6 +125,60 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
             fetchLoggedInData();
         }
 
+    }
+
+    private void checkIfTurnStillExits() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+
+        if (sharedPreferences != null) {
+            String companyId = sharedPreferences.getString("companyId", " ");
+            final String officeId = sharedPreferences.getString("officeId", " ");
+            final String turnId = sharedPreferences.getString("turnId", "");
+
+            DocumentReference companyRef = mFirestore.collection(Util.COLLECTION_COMPANIES).document(companyId);
+            companyRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+
+                        if (document.exists()) {
+                            Company company = document.toObject(Company.class);
+
+                            for (Office office : company.getOffices()) {
+                                if (office.getId().equals(officeId)){
+                                    Log.d(TAG, "Paso 1. Oficina encontrada");
+
+                                    boolean isFound = false;
+                                    for (Turn turn : office.getTurns()) {
+                                        if (turn.getId().equals(turnId)){
+                                            isFound = true;
+                                            Log.d(TAG, "Paso 2. Turno encontrado");
+                                            goToShowTickedInfo();
+                                        }
+                                    }
+
+                                    if (!isFound) {
+                                        Log.d(TAG, "No existe turno, borrando de sharedP...");
+
+                                        // Borrar de sharedPreferences
+                                        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.clear();
+                                        editor.commit();
+                                    }
+                                }
+                            }
+
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -207,7 +267,6 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
                             //Inicialización del adapter
                             adapter = new AdapterDatos(mCompanies, officeCompanyLinker);
                             recycler.setAdapter(adapter);
-
                             //Maneja el item seleccionado en el dashboard.
                             adapter.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -218,13 +277,9 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
                                      * para controlar cuál activity abrir. Si no existe instancia, se abre los detalles
                                      * de la compañía.
                                      */
-                                    if (isTicketActive)
-                                        goToShowTickedInfo(v);
-                                    else
-                                        goToCompanyDetails(v);
+                                    goToCompanyDetails(v);
                                 }
                             });
-
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
@@ -260,7 +315,6 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
                             //Inicialización del adapter
                             adapter = new AdapterDatos(mCompanies, officeCompanyLinker);
                             recycler.setAdapter(adapter);
-
                             //Maneja el item seleccionado en el dashboard.
                             adapter.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -271,13 +325,9 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
                                      * para controlar cuál activity abrir. Si no existe instancia, se abre los detalles
                                      * de la compañía.
                                      */
-                                    if (isTicketActive)
-                                        goToShowTickedInfo(v);
-                                    else
-                                        goToCompanyDetails(v);
+                                    goToCompanyDetails(v);
                                 }
                             });
-
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
@@ -302,10 +352,8 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
 
     /**
      * Traslado a la vista de ShowTicketInfoActivity.
-     *
-     * @param v View.
      */
-    public void goToShowTickedInfo(View v) {
+    public void goToShowTickedInfo() {
         Intent intent = new Intent(DashboardActivity.this, ShowTicketInfoActivity.class);
         startActivity(intent);
     }

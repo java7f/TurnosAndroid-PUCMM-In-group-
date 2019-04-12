@@ -218,9 +218,12 @@ public class PickTypeOfTurnActivity extends AppCompatActivity {
                 }
             });
         }
-        else
-        {
-            getUserAndRegisterTurn(new UserId());
+        else{
+
+            UserId guestUser = new UserId();
+            guestUser.setFirstName("Guest");
+            guestUser.setLastName("User");
+            getUserAndRegisterTurn(guestUser);
         }
     }
 

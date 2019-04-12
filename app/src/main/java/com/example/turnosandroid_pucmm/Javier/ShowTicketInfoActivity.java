@@ -11,19 +11,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.turnosandroid_pucmm.Jesse.DashboardActivity;
 import com.example.turnosandroid_pucmm.Models.CompanyId;
 import com.example.turnosandroid_pucmm.Models.Office;
 import com.example.turnosandroid_pucmm.Models.Turn;
 import com.example.turnosandroid_pucmm.R;
+import com.example.turnosandroid_pucmm.Robert.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.*;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ShowTicketInfoActivity extends AppCompatActivity {
@@ -44,8 +44,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
     //Firebase instance
     private FirebaseFirestore mFirestore;
 
-    private static final String TAG = "CompanyDetailsActivity";
-
+    private static final String TAG = "ShowTicketInfoActivity";
 
     //Buttons
     private Button cancelTurn;
@@ -67,7 +66,6 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         DashboardActivity.isTicketActive = true;
 
-
         //Enlaces con los layouts
         setContentView(R.layout.activity_show_ticket_info);
         toolbar = findViewById(R.id.idToolbarCompany);
@@ -82,7 +80,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        mCompany = new CompanyId();
+        //mCompany = new CompanyId();
 
         //Instancia de la base de datos.
         mFirestore = FirebaseFirestore.getInstance();
@@ -91,9 +89,16 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
          * Obteniendo la compañía, sucursal y el turno creado desde
          * el activity PickTypeOfTurn.
          */
-        mCompany = intent.getParcelableExtra("company");
-        mOffice = intent.getParcelableExtra("office");
-        currentTurn = intent.getParcelableExtra("turn");
+        if (getIntent().getExtras() != null) {
+            mCompany = intent.getParcelableExtra("company");
+            mOffice = intent.getParcelableExtra("office");
+            currentTurn = intent.getParcelableExtra("turn");
+        }
+
+        /**
+         * Leer la empresa en firebase, buscar la oficina y buscar el turno id.
+         * Luego, guardar la Empresa, Oficina y Turno localmente
+         */
 
         /**
          * Si la compañía es nula, quiere decir que se viene directamente
@@ -102,13 +107,11 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
          * En caso contrario, se acaba de crear el turno, por lo que se
          * busca la data en la base de datos y se salva el estado actual.
          */
-        if(mCompany == null)
-        {
+        if (mCompany == null) {
             loadData();
             updateViews();
-        }
-        else
-        {
+            addListener();
+        } else {
             //Finalización de los activities anteriores.
             CompanyDetailsActivity.cda.finish();
             AskTicketActivity.ata.finish();
@@ -117,16 +120,78 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
             //Se busca la data en la base de datos.
             companyId = mCompany.getId();
             officeId = mOffice.getId();
-            fetchData();
+
+            //Click listener del botón de cancelar.
+            cancelTurn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancelTurn(v);
+                }
+            });
+
+            fetchDataListener();
         }
 
     }
 
+    private void addListener() {
+        mFirestore.collection(Util.COLLECTION_COMPANIES)
+                .document(companyId)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+
+                            CompanyId companyTemp = documentSnapshot.toObject(CompanyId.class);
+                            mCompany = companyTemp;
+
+                            for (Office office : mCompany.getOffices()) {
+                                if (office.getId().equals(officeId)) {
+                                    Log.d(TAG, "addListener | Paso 1. Oficina encontrada");
+                                    mOffice = office;
+
+                                    boolean isTurnFound = false;
+                                    for (Turn turn : office.getTurns()) {
+                                        if (turn.getId().equals(turnId)) {
+                                            Log.d(TAG, "addListener | Paso 2. Turno encontrado");
+                                            isTurnFound = true;
+                                            currentTurn = turn;
+                                            setOfficeDetails();
+                                            break;
+                                        }
+                                    }
+
+                                    // If the turn was deleted (not found)
+                                    if (!isTurnFound) {
+                                        Log.d(TAG, "addListener | Turno no encontrado, fue borrado desde la web");
+
+                                        // Paso 1. Borrar sharedP
+                                        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.clear();
+                                        editor.commit();
+
+                                        // Paso 2. Regresar a CompanyDetailsActivity
+                                        Intent goToCompany = new Intent(ShowTicketInfoActivity.this, CompanyDetailsActivity.class);
+                                        goToCompany.putExtra("companyId", companyId);
+                                        goToCompany.putExtra("officeId", officeId);
+                                        startActivity(goToCompany);
+                                        finish();
+                                        Toast.makeText(ShowTicketInfoActivity.this, "Turno cancelado",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
     /**
      * Cancelación del turno y traslado al activity de detalles de compañía.
-     * @param viewServices View.
      */
-    public void cancelTurn(View viewServices){
+    public void cancelTurn(View v) {
 
         /**
          * Existen 2 casos a la hora de cancelar un turno. El primero, es el caso
@@ -137,7 +202,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
          * en el que se quedó el activity antes de salir. En el caso 2, la compañía es nula,
          * por lo que hay que sacar la data de la base de datos antes de hacer la cancelación.
          */
-        if(mCompany == null)
+        if (mCompany == null)
             getCompanyAndDeleteTurn();
         else
             deleteTurn();
@@ -167,7 +232,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
 
                         //Se busca la sucursal en la que se pidió el turno.
                         for (Office office : mCompany.getOffices()) {
-                            if(office.getId().equals(officeId))
+                            if (office.getId().equals(officeId))
                                 mOffice = office;
                         }
 
@@ -178,7 +243,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
                         Log.d(TAG, "No such document");
                     }
                 } else {
-                    Log.d( TAG,"get failed with ", task.getException());
+                    Log.d(TAG, "get failed with ", task.getException());
                 }
             }
         });
@@ -190,48 +255,54 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
      * se borra y luego se actualiza la sucursal entera.
      */
     public void deleteTurn() {
-        if(currentTurn != null)
+        Log.d(TAG, "DeleteTurn()");
+
+        if (currentTurn != null)
             turnId = currentTurn.getId();
-        else
-        {
+        else {
             SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
             turnId = sharedPreferences.getString("turnId", "");
         }
 
+        Log.d(TAG, "turnId: " + turnId);
+
         List<Office> offices = mCompany.getOffices();
         List<Turn> turns = mOffice.getTurns();
-        int turnSize = turns.size();
 
-        for(int i=0; i<turnSize; i++)
-        {
-            if(turns.get(i).getId().equals(turnId))
-            {
+        for (int i = 0; i < turns.size(); i++) {
+
+            if (turns.get(i).getId().equals(turnId)) {
+
+                Log.d(TAG, "Removiendo turno localmente...");
                 turns.remove(i);
                 break;
+
             }
+
         }
 
-        for(int i=0; i<offices.size(); i++)
-        {
-            if(offices.get(i).getId().equals(mOffice.getId()))
-            {
+        for (int i = 0; i < offices.size(); i++) {
+
+            if (offices.get(i).getId().equals(mOffice.getId())) {
                 mCompany.getOffices().set(i, mOffice);
                 break;
             }
         }
 
-        DocumentReference document = mFirestore.collection("companies").document(mCompany.getId());
-        document.update("offices", offices)
-                .addOnSuccessListener(new OnSuccessListener< Void >() {
+        DocumentReference companyRef = mFirestore.collection(Util.COLLECTION_COMPANIES).document(companyId);
+
+        companyRef
+                .update("offices", offices)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         // Paso 1 log.e()
+                        Log.d(TAG, "Borrando turno de sharedP");
                         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.clear();
                         editor.commit();
 
-                        DashboardActivity.isTicketActive = false;
                         Intent goToCompany = new Intent(ShowTicketInfoActivity.this, CompanyDetailsActivity.class);
                         goToCompany.putExtra("companyId", companyId);
                         goToCompany.putExtra("officeId", officeId);
@@ -240,14 +311,82 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
                         Toast.makeText(ShowTicketInfoActivity.this, "Turno cancelado",
                                 Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Failed canceling turn", e);
+
+                        Toast.makeText(ShowTicketInfoActivity.this, "Turno no se pudo cancelar",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 
     /**
      * Trae data de la base de datos.
      */
-    private void fetchData() {
+    private void fetchDataListener() {
 
+        mFirestore.collection(Util.COLLECTION_COMPANIES)
+                .document(companyId)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            Log.d(TAG, "Data: " + documentSnapshot.getData());
+
+                            // Convierte la data y la lleva a tu modelo
+                            CompanyId tempCompany = documentSnapshot.toObject(CompanyId.class);
+                            mCompany = tempCompany;
+                            mCompany.setId(companyId);
+
+                            for (Office office : mCompany.getOffices()) {
+                                if (office.getId().equals(officeId)) {
+                                    Log.d(TAG, "fetchDataListener | Paso 1. Oficina encontrada");
+                                    mOffice = office;
+
+                                    boolean isTurnFound = false;
+                                    turnId  = currentTurn.getId();
+                                    for (Turn turn : office.getTurns()) {
+                                        if (turn.getId().equals(turnId)) {
+                                            Log.d(TAG, "fetchDataListener | Paso 2. Turno encontrado");
+                                            isTurnFound = true;
+                                            currentTurn = turn;
+                                            setOfficeDetails();
+
+                                            //Salva la data en el SharedPreferences.
+                                            saveData();
+                                            break;
+                                        }
+                                    }
+
+                                    // If the turn was deleted (not found)
+                                    if (!isTurnFound) {
+                                        Log.d(TAG, "fetchDataListener | Turno no encontrado, fue borrado desde la web");
+
+                                        // Paso 1. Borrar sharedP
+                                        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.clear();
+                                        editor.commit();
+
+                                        // Paso 2. Regresar a CompanyDetailsActivity
+                                        Intent goToCompany = new Intent(ShowTicketInfoActivity.this, CompanyDetailsActivity.class);
+                                        goToCompany.putExtra("companyId", companyId);
+                                        goToCompany.putExtra("officeId", officeId);
+                                        startActivity(goToCompany);
+                                        finish();
+                                        Toast.makeText(ShowTicketInfoActivity.this, "Turno cancelado",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+/*
         mFirestore.collection("companies").document(companyId)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -281,14 +420,13 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
                     Log.d( TAG,"get failed with ", task.getException());
                 }
             }
-        });
+        });*/
     }
 
     /**
      * Coloca la información correspondiente en pantalla.
      */
-    private void setOfficeDetails()
-    {
+    private void setOfficeDetails() {
         //Variables para los horarios
         int opensAtHours, opensAtMinutes, closesAtHours, closesAtMinutes;
 
@@ -319,17 +457,16 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
 
     /**
      * Devuelve la hora en formato de 12 horas.
+     *
      * @param hour
      * @param minutes
      * @return
      */
-    private String formatHour(int hour, int minutes)
-    {
+    private String formatHour(int hour, int minutes) {
 
-        if(hour > 12)
-            return Integer.toString(hour-12) + ":" + formatMinutes(minutes) + "PM";
-        else
-        {
+        if (hour > 12)
+            return Integer.toString(hour - 12) + ":" + formatMinutes(minutes) + "PM";
+        else {
             if (hour == 0)
                 return "12:" + formatMinutes(minutes) + "AM";
             else
@@ -337,9 +474,8 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         }
     }
 
-    private String formatMinutes(int minutes)
-    {
-        if(minutes == 0)
+    private String formatMinutes(int minutes) {
+        if (minutes == 0)
             return "00";
         else
             return Integer.toString(minutes);
@@ -396,26 +532,25 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         time.setText(waitingTime);
         station.setText(stationId);
         time.setText(waitingTime);
-        fetchData();
     }
 
     /**
      * Función que calcula el tiempo de espera
      * según el tipo de turno solicitado.
      */
-    private int getWaitingTime(){
+    private int getWaitingTime() {
 
         int turnsQuantity = mOffice.getTurns().size();
 
         //Si no hay nadie adelante, no hay tiempo de espera ya que es su turno.
-        if(turnsQuantity == 1)
+        if (turnsQuantity == 1)
             return 0;
 
         //Se calcula el tiempo de espera dependiendo de la cantidad de turnos existentes
         //según el criterio elegido.
-        if(currentTurn.isForMemberships())
+        if (currentTurn.isForMemberships())
             return searchTurns(true) * mOffice.getAverageTime();
-        else if(currentTurn.isForPreferentialAttention())
+        else if (currentTurn.isForPreferentialAttention())
             return searchTurns(false) * mOffice.getAverageTime();
         else
             return searchGenericTurns();
@@ -425,6 +560,7 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
      * Función que busca en la lista de turnos
      * la cantidad de turnos en cola
      * según el tipo de turno solicitado.
+     *
      * @param typeOfTurn true si es de membresía, false si es de preferenciales.
      * @return Entero con cantidad de turnos encontrados.
      */
@@ -432,16 +568,15 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
         List<Turn> turns = mOffice.getTurns();
         int acum = 0;
 
-        for(Turn turn : turns){
+        for (Turn turn : turns) {
 
-            if(currentTurn.getId().equals(turn.getId()))
+            if (currentTurn.getId().equals(turn.getId()))
                 break;
 
-            if(typeOfTurn){
+            if (typeOfTurn) {
                 if (currentTurn.isForMemberships() && currentTurn.getStationId().equals(turn.getStationId()))
                     acum += mOffice.getAverageTime();
-            }
-            else {
+            } else {
                 if (currentTurn.isForPreferentialAttention() && currentTurn.getStationId().equals(turn.getStationId()))
                     acum = mOffice.getAverageTime();
             }
@@ -455,18 +590,19 @@ public class ShowTicketInfoActivity extends AppCompatActivity {
      * Función que busca en la lista de turnos
      * la cantidad de turnos en cola
      * según el tipo de turno solicitado.
+     *
      * @return Entero con cantidad de turnos encontrados.
      */
     private int searchGenericTurns() {
         List<Turn> turns = mOffice.getTurns();
         int acum = 0;
 
-        for(Turn turn : turns){
+        for (Turn turn : turns) {
 
-            if(currentTurn.getId().equals(turn.getId()))
+            if (currentTurn.getId().equals(turn.getId()))
                 break;
 
-            if(!turn.isForMemberships() && !turn.isForPreferentialAttention())
+            if (!turn.isForMemberships() && !turn.isForPreferentialAttention())
                 acum += mOffice.getAverageTime();
         }
 
