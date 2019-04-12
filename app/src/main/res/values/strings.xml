@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">TurnosAndroid-PUCMM</string>
+    <string name="app_name">Turnos</string>
+    <string name="about">Sobre Nosotros</string>
+    <string name="profile">Mi perfil</string>
+    <string name="filter">Seleccione un servicio</string>
+
+    <string-array name="dropdown_filter">
+        <item>Elija un servicio...</item>
+        <item>Agencias de viaje</item>
+        <item>Banca</item>
+        <item>Casinos</item>
+        <item>Comunicaciones</item>
+        <item>Educación</item>
+        <item>Servicio de seguridad</item>
+        <item>Transporte</item>
+        <item>Franquicias</item>
+        <item>Hospitales y clínicas</item>
+        <item>Hotelería</item>
+        <item>Inmobiliarias</item>
+        <item>Intermediación Financiera</item>
+        <item>Reparación</item>
+        <item>Salones de belleza</item>
+        <item>Servicios profesionales</item>
+        <item>Tintorerías</item>
+    </string-array>
 </resources>

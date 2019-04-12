@@ -2,5 +2,20 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#FFFFFF</color>
+    <color name="verde">#013220</color>
+    <color name="negro">#000000</color>
+    <color name="blanco">#FFFFFF</color>
+    <color name="gris">#808080</color>
+    <color name="grisClaro">#d3d3d3</color>
+    <color name="jetGray">#343434</color>
+    <color name="AzulToolbar">#0C2E41</color>
+    <color name="CompanyInfo">#16577C</color>
+    <color name="Sidebar">#1a2226</color>
+    <color name="Contenido">#ecf0f5</color>
+
+    1er: Fondo del logo, #367fa9
+    2do: Fondo del toolbar, #3c8dbc
+    3er: Fondo del sidebar, #1a2226
+    4to: Fondo del contenido, #ecf0f5
 </resources>

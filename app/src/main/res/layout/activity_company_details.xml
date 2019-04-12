@@ -1,104 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffff"
     tools:context=".Javier.CompanyDetailsActivity">
 
-    <TextView
-        android:id="@+id/companyName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:text="Nombre de la empresa"
-        android:textAlignment="center"
-        android:textSize="28dp"
-        android:textStyle="bold"
-        android:textColor="#010203"
-        android:layout_marginTop="20dp" />
-
-    <TextView
-        android:id="@+id/subsidiaryName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:text="Nombre de la sucursal"
-        android:textAlignment="center"
-        android:textSize="24dp"
-        android:layout_marginTop="70dp"
-        />
-
-    <TextView
-        android:id="@+id/address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:text="Dirección de la sucursal"
-        android:textAlignment="center"
-        android:textSize="18dp"
-        android:layout_marginTop="120dp"
-        />
-
-    <TextView
-        android:id="@+id/schedule"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:text="Horario de trabajo"
-        android:textAlignment="center"
-        android:textSize="18dp"
-        android:layout_marginTop="150dp"
-        />
-
     <RelativeLayout
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:background="@drawable/circle_text"
-        android:gravity="center"
-        android:layout_marginTop="220dp">
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/idToolbarCompany"
+            layout="@layout/toolbar1" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/CompanyInfo"
+            android:paddingTop="50dp"
+            android:paddingBottom="25dp">
+
+            <TextView
+                android:id="@+id/companyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
+                android:textAlignment="center"
+                android:textColor="#ffff"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/subsidiaryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="70dp"
+                android:textAlignment="center"
+                android:textColor="#ffff"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="120dp"
+                android:textAlignment="center"
+                android:textColor="#ffff"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="170dp"
+                android:textAlignment="center"
+                android:textColor="#ffff"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="290dp"
+            android:background="@drawable/circle_text"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:textAlignment="center"
+                android:textColor="@color/negro"
+                android:textSize="70sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Minutos Aproximadamente"
+                android:textColor="@color/negro"
+                android:textSize="12sp" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/requestTurn"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
-
-            android:text="Horario de trabajo"
-            android:textAlignment="center"
-            />
+            android:layout_marginTop="500dp"
+            android:backgroundTint="#2150de"
+            android:text="Pedir turno"
+            android:textColor="#ffffff" />
 
     </RelativeLayout>
-
-    <Button
-        android:id="@+id/requestTurn"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="450dp"
-        android:backgroundTint="#2150de"
-        android:onClick="selectService"
-        android:text="Pedir turno"
-        android:textColor="#ffffff" />
-
-    <Button
-        android:id="@+id/cancelTurn"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="510dp"
-        android:backgroundTint="#b00020"
-        android:onClick="cancelTurn"
-        android:text="Cancelar turno"
-        android:textColor="#ffffff"
-        android:visibility="invisible" />
-</RelativeLayout>
+</ScrollView>
