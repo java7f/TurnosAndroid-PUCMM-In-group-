@@ -347,6 +347,7 @@ public class DashboardActivity extends AppCompatActivity implements SwipeRefresh
         String officeID = selectedOffice.getId();
         intent.putExtra("officeId", selectedOffice.getId());
         intent.putExtra("companyId", officeCompanyLinker.get(officeID));
+        checkIfTurnStillExits();
         startActivity(intent);
     }
 

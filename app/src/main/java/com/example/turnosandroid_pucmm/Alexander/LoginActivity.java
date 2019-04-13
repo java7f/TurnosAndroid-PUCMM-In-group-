@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                 intent.putExtra("isGuest", 1);
                 startActivity(intent);
+                finish();
 
             }
         });
